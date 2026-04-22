@@ -6,7 +6,6 @@
     <title>Ton rapport — NicheAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root { --lime: #C8FF00; --dark: #0D0D0D; --card: #161616; --muted: #888; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +37,7 @@
         .rapport-content td, .rapport-content th { border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; font-size: 14px; word-wrap: break-word; }
         .rapport-content th { background: rgba(200,255,0,0.08); color: var(--lime); font-weight: 500; }
         .rapport-content tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-        .rapport-content code { background: transparent; padding: 0; border-radius: 0; font-size: 15px; font-family: 'DM Sans', sans-serif; color: #ccc; }
+        .rapport-content code { background: transparent; padding: 0; font-size: 15px; font-family: 'DM Sans', sans-serif; color: #ccc; }
         .rapport-content pre { background: transparent; border: none; padding: 0; }
         .rapport-content pre code { font-family: 'DM Sans', sans-serif; font-size: 15px; white-space: pre-wrap; }
         .blurred-section { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.5; margin-top: 16px; }
@@ -169,16 +168,10 @@
         document.getElementById("rapport").innerHTML = marked.parse(rapportData);
 
         function exportPDF() {
-            var doc = new window.jspdf.jsPDF();
-            doc.setFontSize(20);
-            doc.setFont("helvetica", "bold");
-            doc.text("NicheAI — Rapport Premium", 15, 20);
-            doc.setFontSize(11);
-            doc.setFont("helvetica", "normal");
-            var content = document.getElementById("rapport").innerText;
-            var lines = doc.splitTextToSize(content, 180);
-            doc.text(lines, 15, 35);
-            doc.save("rapport-nicheai.pdf");
+            var contenu = document.getElementById("rapport").innerHTML;
+            var fenetre = window.open('', '_blank');
+            fenetre.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"DM Sans",sans-serif;background:#0D0D0D;color:#ccc;padding:40px;}.header{border-bottom:2px solid #C8FF00;padding-bottom:20px;margin-bottom:32px;}.logo{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:white;}.logo span{color:#C8FF00;}.subtitle{color:#888;font-size:13px;margin-top:4px;}h1{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#C8FF00;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(200,255,0,0.2);}h2{font-family:"Syne",sans-serif;font-size:16px;font-weight:700;color:white;margin:20px 0 8px;}h3{font-size:15px;color:#ddd;margin:14px 0 6px;}p{margin-bottom:10px;line-height:1.8;}strong{color:white;}ul,ol{margin:8px 0 12px 20px;}li{margin-bottom:6px;}table{width:100%;border-collapse:collapse;margin:16px 0;}td,th{border:1px solid rgba(255,255,255,0.1);padding:10px 14px;font-size:13px;}th{background:rgba(200,255,0,0.1);color:#C8FF00;}tr:nth-child(even){background:rgba(255,255,255,0.03);}.footer{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:#555;text-align:center;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div class="header"><div class="logo">Niche<span>AI</span></div><div class="subtitle">Rapport Premium — Analyse personnalisée générée par l\'IA</div></div>' + contenu + '<div class="footer">NicheAI • Rapport généré automatiquement</div><script>window.onload=function(){setTimeout(function(){window.print();},500);}<\/script></body></html>');
+            fenetre.document.close();
         }
 
         function sendSuggestion(btn) {
