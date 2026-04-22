@@ -6,6 +6,7 @@
     <title>Ton rapport — NicheAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root { --lime: #C8FF00; --dark: #0D0D0D; --card: #161616; --muted: #888; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,9 +39,14 @@
         .rapport-content th { background: rgba(200,255,0,0.08); color: var(--lime); font-weight: 500; }
         .rapport-content tr:nth-child(even) { background: rgba(255,255,255,0.02); }
         .rapport-content code { background: transparent; padding: 0; border-radius: 0; font-size: 15px; font-family: 'DM Sans', sans-serif; color: #ccc; }
-.rapport-content pre { background: transparent; border: none; padding: 0; }
-.rapport-content pre code { font-family: 'DM Sans', sans-serif; font-size: 15px; white-space: pre-wrap; }
+        .rapport-content pre { background: transparent; border: none; padding: 0; }
+        .rapport-content pre code { font-family: 'DM Sans', sans-serif; font-size: 15px; white-space: pre-wrap; }
         .blurred-section { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.5; margin-top: 16px; }
+        .btn-row { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+        .btn-retour { display: inline-block; padding: 13px 28px; background: rgba(255,255,255,0.05); color: white; border-radius: 8px; text-decoration: none; font-size: 14px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+        .btn-retour:hover { background: rgba(255,255,255,0.1); }
+        .btn-pdf { display: inline-block; padding: 13px 28px; background: rgba(200,255,0,0.1); color: var(--lime); border-radius: 8px; font-size: 14px; border: 1px solid rgba(200,255,0,0.3); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+        .btn-pdf:hover { background: rgba(200,255,0,0.2); }
         .premium-block { background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(200,255,0,0.05)); border: 1px solid rgba(124,58,237,0.4); border-radius: 24px; padding: 40px; margin-bottom: 20px; text-align: center; animation: fadeUp 0.5s 0.2s ease both; }
         .premium-icon { font-size: 40px; margin-bottom: 16px; }
         .premium-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
@@ -86,7 +92,6 @@
         <a href="/" class="back-btn">← Nouveau rapport</a>
     </nav>
     <div class="wrapper">
-
         {% if premium %}
         <div class="banner paid">🔓 Rapport Premium débloqué — analyse complète disponible</div>
         {% else %}
@@ -109,6 +114,12 @@
                 <p>📅 Plan d'action semaine 1 : Créer ton profil Malt avec ces 5 éléments précis, contacter ces 10 types de prospects...</p>
             </div>
             {% endif %}
+            <div class="btn-row">
+                <a href="/" class="btn-retour">← Nouveau rapport</a>
+                {% if premium %}
+                <button class="btn-pdf" onclick="exportPDF()">📄 Exporter en PDF</button>
+                {% endif %}
+            </div>
         </div>
 
         {% if not premium %}
@@ -149,13 +160,26 @@
                 <button class="send-btn" id="send-btn" onclick="sendMessage()">Envoyer →</button>
             </div>
         </div>
-
     </div>
+
     <script>
         var rapportData = {{ rapport | tojson }};
         var isPremium = {{ 'true' if premium else 'false' }};
         var questionsUsed = 0;
         document.getElementById("rapport").innerHTML = marked.parse(rapportData);
+
+        function exportPDF() {
+            var doc = new window.jspdf.jsPDF();
+            doc.setFontSize(20);
+            doc.setFont("helvetica", "bold");
+            doc.text("NicheAI — Rapport Premium", 15, 20);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            var content = document.getElementById("rapport").innerText;
+            var lines = doc.splitTextToSize(content, 180);
+            doc.text(lines, 15, 35);
+            doc.save("rapport-nicheai.pdf");
+        }
 
         function sendSuggestion(btn) {
             document.getElementById("chat-input").value = btn.textContent;
@@ -193,8 +217,7 @@
                     input.placeholder = "🔒 Limite atteinte — débloque le Premium pour continuer";
                     input.disabled = true;
                     btn.disabled = true;
-                    if (counter) counter.textContent = "🔒 Limite atteinte — débloque le rapport complet";
-                    if (counter) counter.style.color = "#ef4444";
+                    if (counter) { counter.textContent = "🔒 Limite atteinte — débloque le rapport complet"; counter.style.color = "#ef4444"; }
                 } else {
                     btn.disabled = false;
                     if (counter) counter.textContent = remaining + " question gratuite restante";

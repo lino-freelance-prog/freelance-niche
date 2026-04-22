@@ -34,9 +34,10 @@ Un freelance te donne ces infos :
 - Objectif mensuel : {objectif}€
 
 Génère un rapport avec :
-1. 🎯 Sa niche recommandée (1 paragraphe percutant et précis)
-2. 💬 Un début de pitch LinkedIn (3-4 phrases seulement, arrête-toi au moment le plus intéressant)
-3. 💰 Tarifs : donne UNIQUEMENT une fourchette vague en 1 ligne sans détails
+1. 🎯 Score de niche : donne une note sur 10 avec 1 phrase d'explication (ex: "7/10 — Bon potentiel mais secteur concurrentiel")
+2. 🎯 Niche recommandée (1 paragraphe percutant et précis)
+3. 💬 Un début de pitch LinkedIn (3-4 phrases seulement, arrête-toi au moment le plus intéressant)
+4. 💰 Tarifs : donne UNIQUEMENT une fourchette vague en 1 ligne sans détails
 
 Termine avec exactement ce texte :
 ---
