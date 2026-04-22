@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ton rapport freelance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f0f0; min-height: 100vh; padding: 40px 20px; display: flex; justify-content: center; }
+        .wrapper { max-width: 700px; width: 100%; }
+        .card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 32px; }
+        .header h1 { font-size: 22px; color: #1a1a1a; margin-bottom: 6px; }
+        .header p { color: #888; font-size: 14px; }
+        .rapport { font-size: 15px; line-height: 1.8; color: #2a2a2a; word-wrap: break-word; overflow-wrap: break-word; }
+        .rapport h1 { font-size: 19px; color: #6c63ff; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #f0edff; }
+        .rapport h2 { font-size: 16px; color: #1a1a1a; margin: 20px 0 8px; }
+        .rapport h3 { font-size: 14px; color: #444; margin: 14px 0 6px; }
+        .rapport p { margin-bottom: 10px; }
+        .rapport strong { font-weight: 600; }
+        .rapport ul, .rapport ol { margin: 6px 0 10px 20px; }
+        .rapport li { margin-bottom: 4px; }
+        .rapport table { width: 100%; border-collapse: collapse; margin: 14px 0; table-layout: fixed; word-break: break-word; }
+        .rapport td, .rapport th { border: 1px solid #e0e0e0; padding: 8px 12px; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; }
+        .rapport th { background: #f8f7ff; font-weight: 600; color: #6c63ff; }
+        .rapport tr:nth-child(even) { background: #fafafa; }
+        .rapport code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 13px; word-break: break-all; }
+        .btn-retour { display: inline-block; margin-top: 30px; padding: 12px 24px; background: #f0f0f0; color: #444; border-radius: 8px; text-decoration: none; font-size: 14px; }
+        .chat-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+        .chat-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+        .chat-subtitle { font-size: 13px; color: #888; margin-bottom: 18px; }
+        .suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+        .suggestion-btn { background: #f8f7ff; color: #6c63ff; border: 1px solid #e0d9ff; border-radius: 20px; padding: 7px 13px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .suggestion-btn:hover { background: #6c63ff; color: white; }
+        .chat-messages { max-height: 420px; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; max-width: 85%; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
+        .msg.user { background: #6c63ff; color: white; align-self: flex-end; border-radius: 12px 12px 2px 12px; }
+        .msg.ai { background: #f8f7ff; color: #2a2a2a; align-self: flex-start; border-radius: 12px 12px 12px 2px; }
+        .msg.ai p { margin-bottom: 6px; }
+        .msg.ai ul { margin-left: 16px; }
+        .msg.ai strong { color: #1a1a1a; }
+        .msg.loading { color: #999; font-style: italic; background: #f8f7ff; align-self: flex-start; }
+        .chat-input-row { display: flex; gap: 10px; }
+        .chat-input-row input { flex: 1; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; min-width: 0; }
+        .chat-input-row input:focus { border-color: #6c63ff; }
+        .send-btn { padding: 12px 20px; background: #6c63ff; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+        .send-btn:hover { background: #5a52e0; }
+        .send-btn:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="card">
+            <div class="header">
+                <h1>Ton rapport de positionnement 🎯</h1>
+                <p>Analyse personnalisée générée par l'IA</p>
+            </div>
+            <div class="rapport" id="rapport"></div>
+            <a href="/" class="btn-retour">← Nouveau rapport</a>
+        </div>
+        <div class="chat-card">
+            <div class="chat-title">💬 Tu as des questions sur ton rapport ?</div>
+            <div class="chat-subtitle">Pose n'importe quelle question sur ton freelancing — l'IA te répond personnellement.</div>
+            <div class="suggestions">
+                <button class="suggestion-btn" onclick="sendSuggestion(this)">Comment trouver mes premiers clients ?</button>
+                <button class="suggestion-btn" onclick="sendSuggestion(this)">Rédige mon profil Malt complet</button>
+                <button class="suggestion-btn" onclick="sendSuggestion(this)">Donne-moi un template de case study</button>
+                <button class="suggestion-btn" onclick="sendSuggestion(this)">Comment négocier mon TJM ?</button>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-input" placeholder="Pose ta question ici..." onkeydown="if(event.key==='Enter') sendMessage()">
+                <button class="send-btn" id="send-btn" onclick="sendMessage()">Envoyer ✉️</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var rapportData = {{ rapport | tojson }};
+        document.getElementById("rapport").innerHTML = marked.parse(rapportData);
+        function sendSuggestion(btn) {
+            document.getElementById("chat-input").value = btn.textContent;
+            sendMessage();
+        }
+        async function sendMessage() {
+            var input = document.getElementById("chat-input");
+            var question = input.value.trim();
+            if (!question) return;
+            input.value = "";
+            var messages = document.getElementById("chat-messages");
+            var btn = document.getElementById("send-btn");
+            btn.disabled = true;
+            messages.innerHTML += '<div class="msg user">' + question + '</div>';
+            messages.innerHTML += '<div class="msg loading" id="loading">⏳ Réflexion en cours...</div>';
+            messages.scrollTop = messages.scrollHeight;
+            var response = await fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ question: question, rapport: rapportData })
+            });
+            var data = await response.json();
+            document.getElementById("loading").remove();
+            var aiMsg = document.createElement("div");
+            aiMsg.className = "msg ai";
+            aiMsg.innerHTML = marked.parse(data.reponse);
+            messages.appendChild(aiMsg);
+            messages.scrollTop = messages.scrollHeight;
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
