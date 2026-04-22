@@ -103,5 +103,41 @@
             <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Personnalisé</div></div>
         </div>
     </div>
+<div id="loading-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(13,13,13,0.95); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+    <div style="text-align:center; max-width:400px; padding:40px;">
+        <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px;">Analyse en cours...</div>
+        <div style="color:#888; font-size:14px; margin-bottom:40px;" id="loading-text">Analyse de ton profil...</div>
+        <div style="background:#1a1a1a; border-radius:999px; height:6px; width:100%; overflow:hidden; margin-bottom:16px;">
+            <div id="progress-bar" style="height:6px; background:#C8FF00; border-radius:999px; width:0%; transition:width 0.5s ease;"></div>
+        </div>
+        <div style="color:#C8FF00; font-size:13px;" id="progress-pct">0%</div>
+    </div>
+</div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    var overlay = document.getElementById("loading-overlay");
+    overlay.style.display = "flex";
+    var steps = [
+        {pct: 15, text: "Analyse de ton profil..."},
+        {pct: 35, text: "Identification de ta niche..."},
+        {pct: 55, text: "Rédaction de ton pitch LinkedIn..."},
+        {pct: 75, text: "Calcul de tes tarifs..."},
+        {pct: 90, text: "Finalisation du rapport..."},
+        {pct: 98, text: "Presque prêt..."}
+    ];
+    var i = 0;
+    function nextStep() {
+        if (i < steps.length) {
+            document.getElementById("progress-bar").style.width = steps[i].pct + "%";
+            document.getElementById("progress-pct").textContent = steps[i].pct + "%";
+            document.getElementById("loading-text").textContent = steps[i].text;
+            i++;
+            setTimeout(nextStep, 1800);
+        }
+    }
+    nextStep();
+});
+</script>
 </body>
 </html>
