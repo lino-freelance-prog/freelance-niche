@@ -142,4 +142,4 @@ Réponds de façon concise, pratique et personnalisée en français."""}]
     return {"reponse": message.content[0].text, "locked": False}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
