@@ -3,85 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ton rapport freelance</title>
+    <title>Ton rapport — NicheAI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
     <style>
+        :root { --lime: #C8FF00; --dark: #0D0D0D; --card: #161616; --muted: #888; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f0f0; min-height: 100vh; padding: 40px 20px; display: flex; justify-content: center; }
-        .wrapper { max-width: 700px; width: 100%; }
-        .card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 32px; }
-        .header h1 { font-size: 22px; color: #1a1a1a; margin-bottom: 6px; }
-        .header p { color: #888; font-size: 14px; }
-        .rapport { font-size: 15px; line-height: 1.8; color: #2a2a2a; word-wrap: break-word; overflow-wrap: break-word; }
-        .rapport h1 { font-size: 19px; color: #6c63ff; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #f0edff; }
-        .rapport h2 { font-size: 16px; color: #1a1a1a; margin: 20px 0 8px; }
-        .rapport h3 { font-size: 14px; color: #444; margin: 14px 0 6px; }
-        .rapport p { margin-bottom: 10px; }
-        .rapport strong { font-weight: 600; }
-        .rapport ul, .rapport ol { margin: 6px 0 10px 20px; }
-        .rapport li { margin-bottom: 4px; }
-        .rapport table { width: 100%; border-collapse: collapse; margin: 14px 0; table-layout: fixed; word-break: break-word; }
-        .rapport td, .rapport th { border: 1px solid #e0e0e0; padding: 8px 12px; font-size: 13px; word-wrap: break-word; overflow-wrap: break-word; }
-        .rapport th { background: #f8f7ff; font-weight: 600; color: #6c63ff; }
-        .rapport tr:nth-child(even) { background: #fafafa; }
-        .rapport code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 13px; word-break: break-all; }
-        .btn-retour { display: inline-block; margin-top: 30px; padding: 12px 24px; background: #f0f0f0; color: #444; border-radius: 8px; text-decoration: none; font-size: 14px; }
-        .chat-card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        .chat-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
-        .chat-subtitle { font-size: 13px; color: #888; margin-bottom: 18px; }
-        .suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-        .suggestion-btn { background: #f8f7ff; color: #6c63ff; border: 1px solid #e0d9ff; border-radius: 20px; padding: 7px 13px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-        .suggestion-btn:hover { background: #6c63ff; color: white; }
-        .chat-messages { max-height: 420px; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; max-width: 85%; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
-        .msg.user { background: #6c63ff; color: white; align-self: flex-end; border-radius: 12px 12px 2px 12px; }
-        .msg.ai { background: #f8f7ff; color: #2a2a2a; align-self: flex-start; border-radius: 12px 12px 12px 2px; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: white; min-height: 100vh; }
+        .bg-glow { position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(124,58,237,0.2) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+        nav { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+        .logo span { color: var(--lime); }
+        .back-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 18px; border-radius: 999px; font-size: 14px; text-decoration: none; transition: all 0.2s; }
+        .back-btn:hover { background: rgba(255,255,255,0.1); }
+        .wrapper { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 20px 20px 60px; }
+        .banner { display: flex; align-items: center; gap: 12px; border-radius: 12px; padding: 14px 20px; margin-bottom: 28px; font-size: 14px; animation: fadeUp 0.5s ease both; }
+        .banner.free { background: rgba(200,255,0,0.08); border: 1px solid rgba(200,255,0,0.2); color: var(--lime); }
+        .banner.paid { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: #c4b5fd; }
+        .rapport-card { background: var(--card); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; margin-bottom: 20px; animation: fadeUp 0.5s 0.1s ease both; }
+        .rapport-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .rapport-icon { width: 48px; height: 48px; background: var(--lime); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .rapport-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+        .rapport-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+        .rapport-content { font-size: 15px; line-height: 1.8; color: #ccc; word-wrap: break-word; overflow-wrap: break-word; }
+        .rapport-content h1 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--lime); margin: 28px 0 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(200,255,0,0.2); }
+        .rapport-content h2 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: white; margin: 20px 0 8px; }
+        .rapport-content h3 { font-size: 15px; font-weight: 500; color: #ddd; margin: 14px 0 6px; }
+        .rapport-content p { margin-bottom: 12px; }
+        .rapport-content strong { color: white; font-weight: 500; }
+        .rapport-content ul, .rapport-content ol { margin: 8px 0 12px 20px; }
+        .rapport-content li { margin-bottom: 6px; }
+        .rapport-content table { width: 100%; border-collapse: collapse; margin: 16px 0; table-layout: fixed; }
+        .rapport-content td, .rapport-content th { border: 1px solid rgba(255,255,255,0.08); padding: 10px 14px; font-size: 14px; word-wrap: break-word; }
+        .rapport-content th { background: rgba(200,255,0,0.08); color: var(--lime); font-weight: 500; }
+        .rapport-content tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        .rapport-content code { background: transparent; padding: 0; border-radius: 0; font-size: 15px; font-family: 'DM Sans', sans-serif; color: #ccc; }
+.rapport-content pre { background: transparent; border: none; padding: 0; }
+.rapport-content pre code { font-family: 'DM Sans', sans-serif; font-size: 15px; white-space: pre-wrap; }
+        .blurred-section { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.5; margin-top: 16px; }
+        .premium-block { background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(200,255,0,0.05)); border: 1px solid rgba(124,58,237,0.4); border-radius: 24px; padding: 40px; margin-bottom: 20px; text-align: center; animation: fadeUp 0.5s 0.2s ease both; }
+        .premium-icon { font-size: 40px; margin-bottom: 16px; }
+        .premium-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .premium-sub { color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.6; }
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; text-align: left; }
+        .feature { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px 16px; font-size: 14px; }
+        .price-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 20px; }
+        .price { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: var(--lime); }
+        .price-sub { font-size: 13px; color: var(--muted); text-align: left; line-height: 1.6; }
+        .btn-premium { display: inline-block; background: var(--lime); color: var(--dark); border: none; border-radius: 12px; padding: 16px 40px; font-size: 16px; font-weight: 700; font-family: 'Syne', sans-serif; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,255,0,0.3); }
+        .premium-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+        .chat-card { background: var(--card); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 32px; animation: fadeUp 0.5s 0.3s ease both; }
+        .chat-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+        .chat-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+        .chat-counter { font-size: 12px; color: var(--lime); margin-bottom: 16px; }
+        .suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .sug-btn { background: rgba(200,255,0,0.06); color: var(--lime); border: 1px solid rgba(200,255,0,0.2); border-radius: 999px; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+        .sug-btn:hover { background: rgba(200,255,0,0.15); }
+        .chat-messages { max-height: 400px; overflow-y: auto; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 14px 18px; border-radius: 16px; font-size: 14px; line-height: 1.6; max-width: 88%; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
+        .msg.user { background: var(--lime); color: var(--dark); align-self: flex-end; font-weight: 500; }
+        .msg.ai { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #ccc; align-self: flex-start; }
         .msg.ai p { margin-bottom: 6px; }
+        .msg.ai strong { color: white; }
         .msg.ai ul { margin-left: 16px; }
-        .msg.ai strong { color: #1a1a1a; }
-        .msg.loading { color: #999; font-style: italic; background: #f8f7ff; align-self: flex-start; }
+        .msg.loading { color: var(--muted); font-style: italic; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); align-self: flex-start; }
         .chat-input-row { display: flex; gap: 10px; }
-        .chat-input-row input { flex: 1; padding: 12px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; min-width: 0; }
-        .chat-input-row input:focus { border-color: #6c63ff; }
-        .send-btn { padding: 12px 20px; background: #6c63ff; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
-        .send-btn:hover { background: #5a52e0; }
-        .send-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .chat-input-row input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: white; font-family: 'DM Sans', sans-serif; outline: none; min-width: 0; transition: border 0.2s; }
+        .chat-input-row input::placeholder { color: #444; }
+        .chat-input-row input:focus { border-color: var(--lime); }
+        .chat-input-row input:disabled { opacity: 0.4; cursor: not-allowed; }
+        .send-btn { padding: 14px 22px; background: var(--lime); color: var(--dark); border: none; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'Syne', sans-serif; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .send-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(200,255,0,0.3); }
+        .send-btn:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; box-shadow: none; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+    <div class="bg-glow"></div>
+    <nav>
+        <div class="logo">Niche<span>AI</span></div>
+        <a href="/" class="back-btn">← Nouveau rapport</a>
+    </nav>
     <div class="wrapper">
-        <div class="card">
-            <div class="header">
-                <h1>Ton rapport de positionnement 🎯</h1>
-                <p>Analyse personnalisée générée par l'IA</p>
+
+        {% if premium %}
+        <div class="banner paid">🔓 Rapport Premium débloqué — analyse complète disponible</div>
+        {% else %}
+        <div class="banner free">✦ Aperçu gratuit — 2 sections sur 6 débloquées</div>
+        {% endif %}
+
+        <div class="rapport-card">
+            <div class="rapport-header">
+                <div class="rapport-icon">🎯</div>
+                <div>
+                    <div class="rapport-title">{% if premium %}Rapport Premium complet{% else %}Aperçu gratuit{% endif %}</div>
+                    <div class="rapport-sub">{% if premium %}Analyse IA complète — prête à utiliser{% else %}Débloque le reste pour tout voir{% endif %}</div>
+                </div>
             </div>
-            <div class="rapport" id="rapport"></div>
-            <a href="/" class="btn-retour">← Nouveau rapport</a>
+            <div class="rapport-content" id="rapport"></div>
+            {% if not premium %}
+            <div class="blurred-section">
+                <p>🚀 Top plateforme recommandée : Malt — voici comment optimiser ton profil pour apparaître en premier dans les recherches...</p>
+                <p>🔑 Mots-clés SEO : développeur python freelance, automatisation PME, script python sur mesure...</p>
+                <p>📅 Plan d'action semaine 1 : Créer ton profil Malt avec ces 5 éléments précis, contacter ces 10 types de prospects...</p>
+            </div>
+            {% endif %}
         </div>
+
+        {% if not premium %}
+        <div class="premium-block">
+            <div class="premium-icon">🔒</div>
+            <div class="premium-title">Débloque ton rapport complet</div>
+            <div class="premium-sub">Tu n'as vu que 2 sections sur 6. Débloque tout pour savoir exactement comment te positionner et trouver tes premiers clients dès cette semaine.</div>
+            <div class="features-grid">
+                <div class="feature">💰 Tarifs recommandés détaillés</div>
+                <div class="feature">🚀 Top 3 plateformes + stratégie</div>
+                <div class="feature">🔑 5 mots-clés SEO ciblés</div>
+                <div class="feature">📅 Plan d'action 30 jours</div>
+                <div class="feature">💬 Chat IA illimité</div>
+                <div class="feature">📄 Export PDF du rapport</div>
+            </div>
+            <div class="price-row">
+                <div class="price">9,90€</div>
+                <div class="price-sub">Paiement unique<br>Accès à vie</div>
+            </div>
+            <a href="/paiement" class="btn-premium">Débloquer mon rapport complet — 9,90€ →</a>
+            <div class="premium-note">✓ Paiement sécurisé • ✓ Accès immédiat • ✓ Satisfait ou remboursé</div>
+        </div>
+        {% endif %}
+
         <div class="chat-card">
-            <div class="chat-title">💬 Tu as des questions sur ton rapport ?</div>
-            <div class="chat-subtitle">Pose n'importe quelle question sur ton freelancing — l'IA te répond personnellement.</div>
+            <div class="chat-title">💬 {% if premium %}Des questions sur ton rapport ?{% else %}Chat IA — 2 questions gratuites{% endif %}</div>
+            <div class="chat-sub">{% if premium %}L'IA répond en tenant compte de ton profil unique{% else %}Pose jusqu'à 2 questions gratuites sur ton positionnement{% endif %}</div>
+            {% if not premium %}<div class="chat-counter" id="counter">2 questions gratuites restantes</div>{% endif %}
             <div class="suggestions">
-                <button class="suggestion-btn" onclick="sendSuggestion(this)">Comment trouver mes premiers clients ?</button>
-                <button class="suggestion-btn" onclick="sendSuggestion(this)">Rédige mon profil Malt complet</button>
-                <button class="suggestion-btn" onclick="sendSuggestion(this)">Donne-moi un template de case study</button>
-                <button class="suggestion-btn" onclick="sendSuggestion(this)">Comment négocier mon TJM ?</button>
+                <button class="sug-btn" onclick="sendSuggestion(this)">Comment trouver mes premiers clients ?</button>
+                <button class="sug-btn" onclick="sendSuggestion(this)">Rédige mon profil Malt</button>
+                <button class="sug-btn" onclick="sendSuggestion(this)">Template de case study</button>
+                <button class="sug-btn" onclick="sendSuggestion(this)">Négocier mon TJM</button>
             </div>
             <div class="chat-messages" id="chat-messages"></div>
             <div class="chat-input-row">
                 <input type="text" id="chat-input" placeholder="Pose ta question ici..." onkeydown="if(event.key==='Enter') sendMessage()">
-                <button class="send-btn" id="send-btn" onclick="sendMessage()">Envoyer ✉️</button>
+                <button class="send-btn" id="send-btn" onclick="sendMessage()">Envoyer →</button>
             </div>
         </div>
+
     </div>
     <script>
         var rapportData = {{ rapport | tojson }};
+        var isPremium = {{ 'true' if premium else 'false' }};
+        var questionsUsed = 0;
         document.getElementById("rapport").innerHTML = marked.parse(rapportData);
+
         function sendSuggestion(btn) {
             document.getElementById("chat-input").value = btn.textContent;
             sendMessage();
         }
+
         async function sendMessage() {
             var input = document.getElementById("chat-input");
             var question = input.value.trim();
@@ -96,7 +176,7 @@
             var response = await fetch("/chat", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ question: question, rapport: rapportData })
+                body: JSON.stringify({ question: question, rapport: rapportData, premium: isPremium, questions_used: questionsUsed })
             });
             var data = await response.json();
             document.getElementById("loading").remove();
@@ -105,7 +185,23 @@
             aiMsg.innerHTML = marked.parse(data.reponse);
             messages.appendChild(aiMsg);
             messages.scrollTop = messages.scrollHeight;
-            btn.disabled = false;
+            if (!isPremium) {
+                questionsUsed++;
+                var counter = document.getElementById("counter");
+                var remaining = 2 - questionsUsed;
+                if (remaining <= 0) {
+                    input.placeholder = "🔒 Limite atteinte — débloque le Premium pour continuer";
+                    input.disabled = true;
+                    btn.disabled = true;
+                    if (counter) counter.textContent = "🔒 Limite atteinte — débloque le rapport complet";
+                    if (counter) counter.style.color = "#ef4444";
+                } else {
+                    btn.disabled = false;
+                    if (counter) counter.textContent = remaining + " question gratuite restante";
+                }
+            } else {
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
