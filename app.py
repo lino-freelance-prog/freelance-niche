@@ -49,7 +49,7 @@ Termine avec exactement ce texte :
 
 👆 Débloque tout pour 4,90€ — accès à vie."""
 
-    prompt_complet = f"""Tu es un expert en personal branding pour freelances.
+    prompt_complet = f"""Tu es un consultant expert en personal branding et développement business pour freelances.
 Un freelance te donne ces infos :
 - Compétences : {competences}
 - Secteur : {secteur}
@@ -57,18 +57,68 @@ Un freelance te donne ces infos :
 - Client idéal : {client_type}
 - Objectif mensuel : {objectif}€
 
-Génère un rapport COMPLET et détaillé avec :
-1. 🎯 Score de niche X/10 avec explication détaillée
-2. 🎯 Niche recommandée (très précis)
-3. 💬 Pitch LinkedIn complet prêt à copier-coller
-4. 💰 Tarifs recommandés (TJM et forfaits détaillés)
-5. 🚀 Top 3 plateformes pour trouver des clients + stratégie
-6. 🔑 5 mots-clés SEO pour être trouvé
-7. 📅 Plan d'action 30 jours détaillé
-8. 📧 Template de prospection personnalisé prêt à envoyer
-9. 📞 Script d'appel client
+Génère un rapport PREMIUM ultra-détaillé et actionnable avec :
 
-Sois concret, direct et personnalisé. Réponds en français."""
+1. 🎯 SCORE DE NICHE X/10
+Explique précisément pourquoi ce score, les forces et les faiblesses du positionnement.
+
+2. 🎯 NICHE RECOMMANDÉE
+Sois très précis — donne un positionnement unique, différenciant, avec des exemples concrets de freelances qui réussissent dans cette niche.
+
+3. 💬 PITCH LINKEDIN COMPLET
+- Version courte (headline)
+- Version longue (section "À propos")
+- 3 variations selon le type de client ciblé
+
+4. 💰 TARIFS RECOMMANDÉS
+- TJM recommandé avec justification
+- 3 forfaits détaillés avec prix et contenu exact
+- Stratégie pour augmenter les tarifs dans 6 mois
+- Comment répondre à "c'est trop cher"
+
+5. 🚀 TOP 3 PLATEFORMES
+Pour chaque plateforme :
+- Pourquoi elle est recommandée
+- Comment optimiser le profil étape par étape
+- Les erreurs à éviter
+
+6. 🔑 5 MOTS-CLÉS SEO
+Pour chaque mot-clé :
+- Volume de recherche estimé
+- Comment l'utiliser dans le profil
+
+7. 📅 PLAN D'ACTION 30 JOURS
+- Semaine 1 : actions précises jour par jour
+- Semaine 2 : actions précises
+- Semaine 3 : actions précises
+- Semaine 4 : actions précises
+- KPIs à suivre chaque semaine
+
+8. 📧 TEMPLATES DE PROSPECTION
+- Email froid prêt à envoyer
+- Message LinkedIn prêt à envoyer
+- Message de relance si pas de réponse
+- Comment personnaliser chaque message
+
+9. 📞 SCRIPT D'APPEL CLIENT
+- Comment ouvrir l'appel
+- Questions à poser
+- Comment présenter les tarifs
+- Comment gérer les objections
+- Comment closer
+
+10. ⚠️ POINTS DE VIGILANCE
+- Les 3 erreurs à éviter absolument dans cette niche
+- Les signaux d'alarme d'un mauvais client
+- Comment se protéger juridiquement
+
+11. 📈 PROJECTION FINANCIÈRE
+- Mois 1 : objectif réaliste
+- Mois 3 : objectif atteignable
+- Mois 6 : objectif ambitieux
+- Comment atteindre {objectif}€/mois rapidement
+
+Sois ULTRA concret, donne des exemples réels, des chiffres précis, des phrases exactes à utiliser. Réponds en français."""
 
     message_gratuit = client.messages.create(
         model="claude-haiku-4-5-20251001",
