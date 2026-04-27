@@ -94,7 +94,7 @@
         {% if premium %}
         <div class="banner paid">🔓 Rapport Premium débloqué — analyse complète disponible</div>
         {% else %}
-        <div class="banner free">✦ Aperçu gratuit — 2 sections sur 6 débloquées</div>
+        <div class="banner free">✦ Aperçu gratuit — 4 sections sur 9 débloquées</div>
         {% endif %}
 
         <div class="rapport-card">
@@ -108,9 +108,10 @@
             <div class="rapport-content" id="rapport"></div>
             {% if not premium %}
             <div class="blurred-section">
-                <p>🚀 Top plateforme recommandée : Malt — voici comment optimiser ton profil pour apparaître en premier dans les recherches...</p>
-                <p>🔑 Mots-clés SEO : développeur python freelance, automatisation PME, script python sur mesure...</p>
-                <p>📅 Plan d'action semaine 1 : Créer ton profil Malt avec ces 5 éléments précis, contacter ces 10 types de prospects...</p>
+                <p>🚀 Plateforme n°1 : Malt — voici exactement comment créer ton profil pour apparaître en premier dans les recherches de tes clients idéaux...</p>
+                <p>🔑 Mots-clés SEO : développeur python freelance • automatisation PME • script sur mesure — utilisés par tes futurs clients</p>
+                <p>📅 Plan semaine 1 : Contacte ces 10 types de prospects sur LinkedIn avec ce message exact...</p>
+                <p>📧 Template prospection : "Bonjour [Prénom], j'ai remarqué que votre entreprise..."</p>
             </div>
             {% endif %}
             <div class="btn-row">
@@ -125,20 +126,22 @@
         <div class="premium-block">
             <div class="premium-icon">🔒</div>
             <div class="premium-title">Débloque ton rapport complet</div>
-            <div class="premium-sub">Tu n'as vu que 2 sections sur 6. Débloque tout pour savoir exactement comment te positionner et trouver tes premiers clients dès cette semaine.</div>
+            <div class="premium-sub">Tu n'as vu que 4 sections sur 9. Débloque tout pour savoir exactement comment te positionner et trouver tes premiers clients dès cette semaine.</div>
             <div class="features-grid">
-                <div class="feature">💰 Tarifs recommandés détaillés</div>
                 <div class="feature">🚀 Top 3 plateformes + stratégie</div>
                 <div class="feature">🔑 5 mots-clés SEO ciblés</div>
                 <div class="feature">📅 Plan d'action 30 jours</div>
+                <div class="feature">📧 Template de prospection</div>
+                <div class="feature">📞 Script d'appel client</div>
                 <div class="feature">💬 Chat IA illimité</div>
                 <div class="feature">📄 Export PDF du rapport</div>
+                <div class="feature">🔄 Mises à jour incluses</div>
             </div>
             <div class="price-row">
-                <div class="price">9,90€</div>
+                <div class="price">4,90€</div>
                 <div class="price-sub">Paiement unique<br>Accès à vie</div>
             </div>
-            <a href="/paiement" class="btn-premium">Débloquer mon rapport complet — 9,90€ →</a>
+            <a href="/paiement" class="btn-premium">Débloquer mon rapport complet — 4,90€ →</a>
             <div class="premium-note">✓ Paiement sécurisé • ✓ Accès immédiat • ✓ Satisfait ou remboursé</div>
         </div>
         {% endif %}
@@ -170,7 +173,7 @@
         function exportPDF() {
             var contenu = document.getElementById("rapport").innerHTML;
             var fenetre = window.open('', '_blank');
-            fenetre.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"DM Sans",sans-serif;background:#0D0D0D;color:#ccc;padding:40px;}.header{border-bottom:2px solid #C8FF00;padding-bottom:20px;margin-bottom:32px;}.logo{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:white;}.logo span{color:#C8FF00;}.subtitle{color:#888;font-size:13px;margin-top:4px;}h1{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#C8FF00;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(200,255,0,0.2);}h2{font-family:"Syne",sans-serif;font-size:16px;font-weight:700;color:white;margin:20px 0 8px;}h3{font-size:15px;color:#ddd;margin:14px 0 6px;}p{margin-bottom:10px;line-height:1.8;}strong{color:white;}ul,ol{margin:8px 0 12px 20px;}li{margin-bottom:6px;}table{width:100%;border-collapse:collapse;margin:16px 0;}td,th{border:1px solid rgba(255,255,255,0.1);padding:10px 14px;font-size:13px;}th{background:rgba(200,255,0,0.1);color:#C8FF00;}tr:nth-child(even){background:rgba(255,255,255,0.03);}.footer{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:#555;text-align:center;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div class="header"><div class="logo">Niche<span>AI</span></div><div class="subtitle">Rapport Premium — Analyse personnalisée générée par l\'IA</div></div>' + contenu + '<div class="footer">NicheAI • Rapport généré automatiquement</div><script>window.onload=function(){setTimeout(function(){window.print();},500);}<\/script></body></html>');
+            fenetre.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"DM Sans",sans-serif;background:#0D0D0D;color:#ccc;padding:40px;}.header{border-bottom:2px solid #C8FF00;padding-bottom:20px;margin-bottom:32px;}.logo{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:white;}.logo span{color:#C8FF00;}.subtitle{color:#888;font-size:13px;margin-top:4px;}h1{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#C8FF00;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(200,255,0,0.2);}h2{font-family:"Syne",sans-serif;font-size:16px;font-weight:700;color:white;margin:20px 0 8px;}h3{font-size:15px;color:#ddd;margin:14px 0 6px;}p{margin-bottom:10px;line-height:1.8;}strong{color:white;}ul,ol{margin:8px 0 12px 20px;}li{margin-bottom:6px;}table{width:100%;border-collapse:collapse;margin:16px 0;}td,th{border:1px solid rgba(255,255,255,0.1);padding:10px 14px;font-size:13px;}th{background:rgba(200,255,0,0.1);color:#C8FF00;}tr:nth-child(even){background:rgba(255,255,255,0.03);}.footer{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:#555;text-align:center;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div class="header"><div class="logo">Niche<span>AI</span></div><div class="subtitle">Rapport Premium — Analyse personnalisée générée par l\'IA</div></div>' + contenu + '<div class="footer">NicheAI • nicheai-wugy.onrender.com • Rapport généré automatiquement</div><script>window.onload=function(){setTimeout(function(){window.print();},500);}<\/script></body></html>');
             fenetre.document.close();
         }
 

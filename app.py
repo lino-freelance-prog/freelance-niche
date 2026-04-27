@@ -34,19 +34,20 @@ Un freelance te donne ces infos :
 - Objectif mensuel : {objectif}€
 
 Génère un rapport avec :
-1. 🎯 Score de niche : donne une note sur 10 avec 1 phrase d'explication (ex: "7/10 — Bon potentiel mais secteur concurrentiel")
-2. 🎯 Niche recommandée (1 paragraphe percutant et précis)
-3. 💬 Un début de pitch LinkedIn (3-4 phrases seulement, arrête-toi au moment le plus intéressant)
-4. 💰 Tarifs : donne UNIQUEMENT une fourchette vague en 1 ligne sans détails
+1. 🎯 Score de niche X/10 avec explication en 1 phrase
+2. 🎯 Niche recommandée (2 paragraphes précis et percutants)
+3. 💬 Pitch LinkedIn COMPLET prêt à copier-coller
+4. 💰 Fourchette de tarifs avec 2-3 options concrètes
 
 Termine avec exactement ce texte :
 ---
 🔒 **Rapport Premium — sections verrouillées**
-*Plateforme recommandée n°1 : ██████████*
-*Mots-clés pour être trouvé : ██████ • ██████ • ██████*
-*Plan d'action semaine 1 : ██████████████████*
+*Plateforme n°1 recommandée : ██████████ — voici exactement comment créer ton profil pour apparaître en premier...*
+*Mots-clés SEO : ██████ • ██████ • ██████ — utilisés par tes futurs clients pour te trouver*
+*Plan d'action semaine 1 : Contacte ces ██████ types de prospects sur ██████ avec ce message...*
+*Template de prospection personnalisé : "Bonjour ██████, j'ai remarqué que..."*
 
-👆 Débloque le rapport complet pour accéder à tout."""
+👆 Débloque tout pour 4,90€ — accès à vie."""
 
     prompt_complet = f"""Tu es un expert en personal branding pour freelances.
 Un freelance te donne ces infos :
@@ -57,24 +58,27 @@ Un freelance te donne ces infos :
 - Objectif mensuel : {objectif}€
 
 Génère un rapport COMPLET et détaillé avec :
-1. 🎯 Niche recommandée (très précis)
-2. 💬 Pitch LinkedIn complet prêt à copier-coller
-3. 💰 Tarifs recommandés (TJM et forfaits)
-4. 🚀 Top 3 plateformes pour trouver des clients
-5. 🔑 5 mots-clés SEO pour être trouvé
-6. 📅 Plan d'action 30 jours
+1. 🎯 Score de niche X/10 avec explication détaillée
+2. 🎯 Niche recommandée (très précis)
+3. 💬 Pitch LinkedIn complet prêt à copier-coller
+4. 💰 Tarifs recommandés (TJM et forfaits détaillés)
+5. 🚀 Top 3 plateformes pour trouver des clients + stratégie
+6. 🔑 5 mots-clés SEO pour être trouvé
+7. 📅 Plan d'action 30 jours détaillé
+8. 📧 Template de prospection personnalisé prêt à envoyer
+9. 📞 Script d'appel client
 
 Sois concret, direct et personnalisé. Réponds en français."""
 
     message_gratuit = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=600,
+        max_tokens=800,
         messages=[{"role": "user", "content": prompt_gratuit}]
     )
 
     message_complet = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=1500,
+        max_tokens=2000,
         messages=[{"role": "user", "content": prompt_complet}]
     )
 
@@ -94,9 +98,9 @@ def paiement():
                     "currency": "eur",
                     "product_data": {
                         "name": "NicheAI — Rapport Premium",
-                        "description": "Rapport complet : tarifs, plateformes, mots-clés SEO, plan 30 jours + chat illimité"
+                        "description": "Rapport complet : tarifs, plateformes, mots-clés SEO, plan 30 jours, template prospection + chat illimité"
                     },
-                    "unit_amount": 990,
+                    "unit_amount": 490,
                 },
                 "quantity": 1,
             }],
