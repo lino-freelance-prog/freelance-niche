@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+    from flask import Flask, render_template, request, session, redirect, url_for
 import anthropic
 import stripe
 import os
 from dotenv import load_dotenv
-from sendgrid import SendGridAPIClient
-from sendgrid.mail import Mail
 
 load_dotenv()
 
@@ -16,17 +14,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
 def envoyer_email(destinataire, rapport):
-    message = Mail(
-        from_email="nicheai.contact@gmail.com",
-        to_emails=destinataire,
-        subject="🎯 Ton rapport NicheAI Premium",
-        html_content=f"<h2>Ton rapport NicheAI Premium</h2><pre style='white-space:pre-wrap'>{rapport}</pre>"
-    )
-    try:
-        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
-        sg.send(message)
-    except Exception as e:
-        print(f"Erreur email: {e}")
+    print(f"Email à envoyer à {destinataire}")
 
 @app.route("/")
 def index():
