@@ -2,4 +2,4 @@ flask
 anthropic
 stripe
 python-dotenv
-sendgrid
+sendgrid==6.11.0
