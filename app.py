@@ -3,6 +3,8 @@ import anthropic
 import stripe
 import os
 from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.mail import Mail
 
 load_dotenv()
 
@@ -12,6 +14,19 @@ app.secret_key = "nicheai_secret_2024"
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+
+def envoyer_email(destinataire, rapport):
+    message = Mail(
+        from_email="nicheai.contact@gmail.com",
+        to_emails=destinataire,
+        subject="🎯 Ton rapport NicheAI Premium",
+        html_content=f"<h2>Ton rapport NicheAI Premium</h2><pre style='white-space:pre-wrap'>{rapport}</pre>"
+    )
+    try:
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        sg.send(message)
+    except Exception as e:
+        print(f"Erreur email: {e}")
 
 @app.route("/")
 def index():
@@ -24,6 +39,9 @@ def generer():
     experience = request.form.get("experience")
     client_type = request.form.get("client_type")
     objectif = request.form.get("objectif")
+    email = request.form.get("email", "")
+
+    session['email'] = email
 
     prompt_gratuit = f"""Tu es un expert en personal branding pour freelances.
 Un freelance te donne ces infos :
@@ -34,22 +52,20 @@ Un freelance te donne ces infos :
 - Objectif mensuel : {objectif}€
 
 Génère un rapport avec :
-1. 🎯 Score de niche X/10 avec explication en 1 phrase
-2. 🎯 Niche recommandée (2 paragraphes précis et percutants)
-3. 💬 Pitch LinkedIn COMPLET prêt à copier-coller
-4. 💰 Fourchette de tarifs avec 2-3 options concrètes
+1. 🎯 Sa niche recommandée (1 paragraphe percutant et précis)
+2. 💬 Un début de pitch LinkedIn (3-4 phrases seulement, arrête-toi au moment le plus intéressant)
+3. 💰 Tarifs : donne UNIQUEMENT une fourchette vague en 1 ligne sans détails
 
 Termine avec exactement ce texte :
 ---
 🔒 **Rapport Premium — sections verrouillées**
-*Plateforme n°1 recommandée : ██████████ — voici exactement comment créer ton profil pour apparaître en premier...*
-*Mots-clés SEO : ██████ • ██████ • ██████ — utilisés par tes futurs clients pour te trouver*
-*Plan d'action semaine 1 : Contacte ces ██████ types de prospects sur ██████ avec ce message...*
-*Template de prospection personnalisé : "Bonjour ██████, j'ai remarqué que..."*
+*Plateforme recommandée n°1 : ██████████*
+*Mots-clés pour être trouvé : ██████ • ██████ • ██████*
+*Plan d'action semaine 1 : ██████████████████*
 
-👆 Débloque tout pour 4,90€ — accès à vie."""
+👆 Débloque le rapport complet pour accéder à tout."""
 
-    prompt_complet = f"""Tu es un consultant expert en personal branding et développement business pour freelances.
+    prompt_complet = f"""Tu es un expert en personal branding pour freelances.
 Un freelance te donne ces infos :
 - Compétences : {competences}
 - Secteur : {secteur}
@@ -57,68 +73,18 @@ Un freelance te donne ces infos :
 - Client idéal : {client_type}
 - Objectif mensuel : {objectif}€
 
-Génère un rapport PREMIUM ultra-détaillé et actionnable avec :
+Génère un rapport COMPLET et détaillé avec :
+1. 🎯 Score de niche X/10 avec explication détaillée
+2. 🎯 Niche recommandée (très précis)
+3. 💬 Pitch LinkedIn complet prêt à copier-coller
+4. 💰 Tarifs recommandés (TJM et forfaits détaillés)
+5. 🚀 Top 3 plateformes pour trouver des clients + stratégie
+6. 🔑 5 mots-clés SEO pour être trouvé
+7. 📅 Plan d'action 30 jours détaillé
+8. 📧 Template de prospection personnalisé prêt à envoyer
+9. 📞 Script d'appel client
 
-1. 🎯 SCORE DE NICHE X/10
-Explique précisément pourquoi ce score, les forces et les faiblesses du positionnement.
-
-2. 🎯 NICHE RECOMMANDÉE
-Sois très précis — donne un positionnement unique, différenciant, avec des exemples concrets de freelances qui réussissent dans cette niche.
-
-3. 💬 PITCH LINKEDIN COMPLET
-- Version courte (headline)
-- Version longue (section "À propos")
-- 3 variations selon le type de client ciblé
-
-4. 💰 TARIFS RECOMMANDÉS
-- TJM recommandé avec justification
-- 3 forfaits détaillés avec prix et contenu exact
-- Stratégie pour augmenter les tarifs dans 6 mois
-- Comment répondre à "c'est trop cher"
-
-5. 🚀 TOP 3 PLATEFORMES
-Pour chaque plateforme :
-- Pourquoi elle est recommandée
-- Comment optimiser le profil étape par étape
-- Les erreurs à éviter
-
-6. 🔑 5 MOTS-CLÉS SEO
-Pour chaque mot-clé :
-- Volume de recherche estimé
-- Comment l'utiliser dans le profil
-
-7. 📅 PLAN D'ACTION 30 JOURS
-- Semaine 1 : actions précises jour par jour
-- Semaine 2 : actions précises
-- Semaine 3 : actions précises
-- Semaine 4 : actions précises
-- KPIs à suivre chaque semaine
-
-8. 📧 TEMPLATES DE PROSPECTION
-- Email froid prêt à envoyer
-- Message LinkedIn prêt à envoyer
-- Message de relance si pas de réponse
-- Comment personnaliser chaque message
-
-9. 📞 SCRIPT D'APPEL CLIENT
-- Comment ouvrir l'appel
-- Questions à poser
-- Comment présenter les tarifs
-- Comment gérer les objections
-- Comment closer
-
-10. ⚠️ POINTS DE VIGILANCE
-- Les 3 erreurs à éviter absolument dans cette niche
-- Les signaux d'alarme d'un mauvais client
-- Comment se protéger juridiquement
-
-11. 📈 PROJECTION FINANCIÈRE
-- Mois 1 : objectif réaliste
-- Mois 3 : objectif atteignable
-- Mois 6 : objectif ambitieux
-- Comment atteindre {objectif}€/mois rapidement
-
-Sois ULTRA concret, donne des exemples réels, des chiffres précis, des phrases exactes à utiliser. Réponds en français."""
+Sois concret, direct et personnalisé. Réponds en français."""
 
     message_gratuit = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -165,8 +131,11 @@ def paiement():
 @app.route("/success")
 def success():
     rapport_complet = session.get('rapport_complet', None)
+    email = session.get('email', None)
     if not rapport_complet:
         return redirect(url_for('index'))
+    if email:
+        envoyer_email(email, rapport_complet)
     return render_template("resultat.html", rapport=rapport_complet, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
 @app.route("/cancel")
@@ -182,19 +151,14 @@ def chat():
     questions_used = data.get("questions_used", 0)
 
     if not is_premium and questions_used >= 2:
-        return {"reponse": "🔒 Tu as utilisé tes 2 questions gratuites ! Débloque le rapport complet pour un chat illimité.", "locked": True}
+        return {"reponse": "🔒 Tu as utilisé tes 2 questions gratuites ! Débloque le rapport complet pour un chat illimité."}
 
-    message = client.messages.create(
+    reponse = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=1000,
-        messages=[{"role": "user", "content": f"""Tu es un assistant spécialisé uniquement dans le freelancing, le personal branding et la carrière professionnelle.
-Si la question n'est pas liée à ces sujets, réponds : "Je suis spécialisé dans le freelancing et la carrière. Je ne peux pas répondre à cette question !"
-Voici le rapport de l'utilisateur :
-{rapport}
-Question : {question}
-Réponds de façon concise, pratique et personnalisée en français."""}]
+        max_tokens=500,
+        messages=[{"role": "user", "content": f"Voici le rapport freelance:\n{rapport}\n\nQuestion: {question}"}]
     )
-    return {"reponse": message.content[0].text, "locked": False}
+    return {"reponse": reponse.content[0].text}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True)
