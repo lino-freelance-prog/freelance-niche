@@ -12,6 +12,7 @@ app.secret_key = "nicheai_secret_2024"
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 
 @app.route("/")
 def index():
