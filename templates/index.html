@@ -19,9 +19,14 @@
         .bg-glow { position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(124,58,237,0.25) 0%, transparent 70%); pointer-events: none; z-index: 0; }
 
         nav { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; }
-        .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .logo { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
         .logo span { color: var(--lime); }
         .nav-badge { background: rgba(200,255,0,0.1); color: var(--lime); border: 1px solid rgba(200,255,0,0.3); padding: 6px 14px; border-radius: 999px; font-size: 13px; }
+
+        @keyframes r1 { from{transform:rotateY(0)} to{transform:rotateY(360deg)} }
+        @keyframes r2 { from{transform:rotateX(0) rotateY(60deg)} to{transform:rotateX(360deg) rotateY(60deg)} }
+        @keyframes r3 { from{transform:rotateX(60deg) rotateY(0)} to{transform:rotateX(60deg) rotateY(360deg)} }
+        @keyframes globePulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
         .hero { position: relative; z-index: 1; text-align: center; padding: 60px 20px 40px; }
         .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 8px 16px; font-size: 13px; color: var(--muted); margin-bottom: 32px; animation: fadeUp 0.6s ease both; }
@@ -51,12 +56,23 @@
 
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body>
     <div class="bg-glow"></div>
     <nav>
-        <div class="logo">Niche<span>AI</span></div>
+        <div class="logo">
+            <svg width="36" height="36" viewBox="0 0 72 72">
+                <defs><clipPath id="clipNav"><circle cx="36" cy="36" r="30"/></clipPath></defs>
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#C8FF00" stroke-width="1.5" opacity="0.2"/>
+                <ellipse cx="36" cy="36" rx="30" ry="8" fill="none" stroke="#C8FF00" stroke-width="2.5" opacity="0.9" clip-path="url(#clipNav)" style="transform-origin:36px 36px; animation:r1 6s linear infinite"/>
+                <ellipse cx="36" cy="36" rx="30" ry="8" fill="none" stroke="#C8FF00" stroke-width="2.5" opacity="0.6" clip-path="url(#clipNav)" transform="rotate(60 36 36)" style="transform-origin:36px 36px; animation:r2 9s linear infinite"/>
+                <ellipse cx="36" cy="36" rx="30" ry="8" fill="none" stroke="#C8FF00" stroke-width="2.5" opacity="0.35" clip-path="url(#clipNav)" transform="rotate(120 36 36)" style="transform-origin:36px 36px; animation:r3 12s linear infinite reverse"/>
+                <circle cx="36" cy="36" r="7" fill="#C8FF00" style="animation:globePulse 3s ease-in-out infinite"/>
+            </svg>
+            Niche<span>AI</span>
+        </div>
         <div class="nav-badge">✦ Propulsé par l'IA</div>
     </nav>
     <div class="hero">
@@ -97,115 +113,119 @@
                 <button type="submit" class="btn">Générer mon rapport gratuit →</button>
             </form>
         </div>
+
         <div style="max-width:760px; margin: 60px auto 0; padding: 0 20px;">
-    <div style="text-align:center; margin-bottom:40px;">
-        <div style="display:inline-block; background:rgba(200,255,0,0.08); border:1px solid rgba(200,255,0,0.2); border-radius:999px; padding:6px 16px; font-size:13px; color:var(--lime); margin-bottom:16px;">Comment ça marche</div>
-        <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800;">3 étapes pour trouver ta niche</div>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
-            <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">01</div>
-            <div style="font-weight:500; margin-bottom:8px; font-size:15px;">Remplis le formulaire</div>
-            <div style="color:#888; font-size:13px; line-height:1.6;">5 questions simples sur tes compétences et tes objectifs. Ça prend moins de 2 minutes.</div>
+            <div style="text-align:center; margin-bottom:40px;">
+                <div style="display:inline-block; background:rgba(200,255,0,0.08); border:1px solid rgba(200,255,0,0.2); border-radius:999px; padding:6px 16px; font-size:13px; color:var(--lime); margin-bottom:16px;">Comment ça marche</div>
+                <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800;">3 étapes pour trouver ta niche</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+                    <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">01</div>
+                    <div style="font-weight:500; margin-bottom:8px; font-size:15px;">Remplis le formulaire</div>
+                    <div style="color:#888; font-size:13px; line-height:1.6;">5 questions simples sur tes compétences et tes objectifs. Ça prend moins de 2 minutes.</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+                    <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">02</div>
+                    <div style="font-weight:500; margin-bottom:8px; font-size:15px;">L'IA analyse ton profil</div>
+                    <div style="color:#888; font-size:13px; line-height:1.6;">Notre IA analyse des milliers de profils pour trouver le positionnement parfait pour toi.</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+                    <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">03</div>
+                    <div style="font-weight:500; margin-bottom:8px; font-size:15px;">Reçois ton rapport</div>
+                    <div style="color:#888; font-size:13px; line-height:1.6;">Niche, pitch LinkedIn, tarifs et plan d'action — tout en 30 secondes.</div>
+                </div>
+            </div>
         </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
-            <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">02</div>
-            <div style="font-weight:500; margin-bottom:8px; font-size:15px;">L'IA analyse ton profil</div>
-            <div style="color:#888; font-size:13px; line-height:1.6;">Notre IA analyse des milliers de profils pour trouver le positionnement parfait pour toi.</div>
+
+        <div style="max-width:760px; margin: 60px auto 0; padding: 0 20px; overflow:hidden;">
+            <div style="text-align:center; margin-bottom:40px;">
+                <div style="display:inline-block; background:rgba(200,255,0,0.08); border:1px solid rgba(200,255,0,0.2); border-radius:999px; padding:6px 16px; font-size:13px; color:var(--lime); margin-bottom:16px;">Ils ont trouvé leur niche</div>
+                <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800;">Ce qu'ils en disent</div>
+            </div>
+            <div style="display:flex; gap:20px; animation:scroll 20s linear infinite; width:max-content;" id="testimonials">
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
+                    <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
+                    <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"En 30 secondes j'ai eu un positionnement que j'aurais mis des semaines à trouver seul."</div>
+                    <div style="font-size:13px; font-weight:500;">Thomas R.</div>
+                    <div style="font-size:12px; color:#888;">Développeur freelance</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
+                    <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
+                    <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Le pitch LinkedIn généré m'a permis de décrocher 2 clients en une semaine."</div>
+                    <div style="font-size:13px; font-weight:500;">Sarah M.</div>
+                    <div style="font-size:12px; color:#888;">Designer UX freelance</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
+                    <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
+                    <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"J'hésitais entre plusieurs niches depuis 6 mois. NicheAI m'a tranché la question en 30 secondes."</div>
+                    <div style="font-size:13px; font-weight:500;">Karim B.</div>
+                    <div style="font-size:12px; color:#888;">Consultant marketing</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
+                    <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
+                    <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Le rapport premium vaut largement son prix. J'ai récupéré mon investissement dès la première mission."</div>
+                    <div style="font-size:13px; font-weight:500;">Julie D.</div>
+                    <div style="font-size:12px; color:#888;">Rédactrice web freelance</div>
+                </div>
+                <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
+                    <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
+                    <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Mon TJM a augmenté de 40% depuis que j'ai suivi les recommandations de NicheAI."</div>
+                    <div style="font-size:13px; font-weight:500;">Marc L.</div>
+                    <div style="font-size:12px; color:#888;">Data analyst freelance</div>
+                </div>
+            </div>
         </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
-            <div style="font-family:'Syne',sans-serif; font-size:36px; font-weight:800; color:var(--lime); margin-bottom:12px;">03</div>
-            <div style="font-weight:500; margin-bottom:8px; font-size:15px;">Reçois ton rapport</div>
-            <div style="color:#888; font-size:13px; line-height:1.6;">Niche, pitch LinkedIn, tarifs et plan d'action — tout en 30 secondes.</div>
-        </div>
-    </div>
-</div>
-<div style="max-width:760px; margin: 60px auto 0; padding: 0 20px; overflow:hidden;">
-    <div style="text-align:center; margin-bottom:40px;">
-        <div style="display:inline-block; background:rgba(200,255,0,0.08); border:1px solid rgba(200,255,0,0.2); border-radius:999px; padding:6px 16px; font-size:13px; color:var(--lime); margin-bottom:16px;">Ils ont trouvé leur niche</div>
-        <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800;">Ce qu'ils en disent</div>
-    </div>
-    <div style="display:flex; gap:20px; animation:scroll 20s linear infinite; width:max-content;" id="testimonials">
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
-            <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"En 30 secondes j'ai eu un positionnement que j'aurais mis des semaines à trouver seul."</div>
-            <div style="font-size:13px; font-weight:500;">Thomas R.</div>
-            <div style="font-size:12px; color:#888;">Développeur freelance</div>
-        </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
-            <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Le pitch LinkedIn généré m'a permis de décrocher 2 clients en une semaine. Incroyable !"</div>
-            <div style="font-size:13px; font-weight:500;">Sarah M.</div>
-            <div style="font-size:12px; color:#888;">Designer UX freelance</div>
-        </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
-            <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"J'hésitais entre plusieurs niches depuis 6 mois. NicheAI m'a tranché la question en 30 secondes."</div>
-            <div style="font-size:13px; font-weight:500;">Karim B.</div>
-            <div style="font-size:12px; color:#888;">Consultant marketing</div>
-        </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
-            <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Le rapport premium vaut largement les 9,90€. J'ai récupéré mon investissement dès la première mission."</div>
-            <div style="font-size:13px; font-weight:500;">Julie D.</div>
-            <div style="font-size:12px; color:#888;">Rédactrice web freelance</div>
-        </div>
-        <div style="background:#161616; border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; min-width:280px;">
-            <div style="color:#C8FF00; font-size:20px; margin-bottom:12px;">★★★★★</div>
-            <div style="font-size:14px; color:#ccc; line-height:1.6; margin-bottom:16px;">"Mon TJM a augmenté de 40% depuis que j'ai suivi les recommandations de NicheAI."</div>
-            <div style="font-size:13px; font-weight:500;">Marc L.</div>
-            <div style="font-size:12px; color:#888;">Data analyst freelance</div>
-        </div>
-    </div>
-</div>
-<style>
-@keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-#testimonials:hover { animation-play-state: paused; }
-</style>
+
         <div class="stats">
             <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Rapports générés</div></div>
             <div class="stat"><div class="stat-num">30s</div><div class="stat-label">Temps moyen</div></div>
             <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Personnalisé</div></div>
         </div>
     </div>
-<div id="loading-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(13,13,13,0.95); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
-    <div style="text-align:center; max-width:400px; padding:40px;">
-        <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px;">Analyse en cours...</div>
-        <div style="color:#888; font-size:14px; margin-bottom:40px;" id="loading-text">Analyse de ton profil...</div>
-        <div style="background:#1a1a1a; border-radius:999px; height:6px; width:100%; overflow:hidden; margin-bottom:16px;">
-            <div id="progress-bar" style="height:6px; background:#C8FF00; border-radius:999px; width:0%; transition:width 0.5s ease;"></div>
-        </div>
-        <div style="color:#C8FF00; font-size:13px;" id="progress-pct">0%</div>
-    </div>
-</div>
 
-<script>
-document.querySelector("form").addEventListener("submit", function() {
-    var overlay = document.getElementById("loading-overlay");
-    overlay.style.display = "flex";
-    var steps = [
-        {pct: 15, text: "Analyse de ton profil..."},
-        {pct: 35, text: "Identification de ta niche..."},
-        {pct: 55, text: "Rédaction de ton pitch LinkedIn..."},
-        {pct: 75, text: "Calcul de tes tarifs..."},
-        {pct: 90, text: "Finalisation du rapport..."},
-        {pct: 98, text: "Presque prêt..."}
-    ];
-    var i = 0;
-    function nextStep() {
-        if (i < steps.length) {
-            document.getElementById("progress-bar").style.width = steps[i].pct + "%";
-            document.getElementById("progress-pct").textContent = steps[i].pct + "%";
-            document.getElementById("loading-text").textContent = steps[i].text;
-            i++;
-            setTimeout(nextStep, 1800);
-        }
-    }
-    nextStep();
-});
-</script>
+    <div id="loading-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(13,13,13,0.95); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="text-align:center; max-width:400px; padding:40px;">
+            <div style="font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:8px;">Analyse en cours...</div>
+            <div style="color:#888; font-size:14px; margin-bottom:40px;" id="loading-text">Analyse de ton profil...</div>
+            <div style="background:#1a1a1a; border-radius:999px; height:6px; width:100%; overflow:hidden; margin-bottom:16px;">
+                <div id="progress-bar" style="height:6px; background:#C8FF00; border-radius:999px; width:0%; transition:width 0.5s ease;"></div>
+            </div>
+            <div style="color:#C8FF00; font-size:13px;" id="progress-pct">0%</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function() {
+            var overlay = document.getElementById("loading-overlay");
+            overlay.style.display = "flex";
+            var steps = [
+                {pct: 15, text: "Analyse de ton profil..."},
+                {pct: 35, text: "Identification de ta niche..."},
+                {pct: 55, text: "Rédaction de ton pitch LinkedIn..."},
+                {pct: 75, text: "Calcul de tes tarifs..."},
+                {pct: 90, text: "Finalisation du rapport..."},
+                {pct: 98, text: "Presque prêt..."}
+            ];
+            var i = 0;
+            function nextStep() {
+                if (i < steps.length) {
+                    document.getElementById("progress-bar").style.width = steps[i].pct + "%";
+                    document.getElementById("progress-pct").textContent = steps[i].pct + "%";
+                    document.getElementById("loading-text").textContent = steps[i].text;
+                    i++;
+                    setTimeout(nextStep, 1800);
+                }
+            }
+            nextStep();
+        });
+
+        document.getElementById("testimonials").addEventListener("mouseover", function() {
+            this.style.animationPlayState = "paused";
+        });
+        document.getElementById("testimonials").addEventListener("mouseout", function() {
+            this.style.animationPlayState = "running";
+        });
+    </script>
 </body>
 </html>
