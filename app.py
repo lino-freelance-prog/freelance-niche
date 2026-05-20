@@ -8,20 +8,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def supprimer_emojis(texte):
-    pattern = re.compile(
-        u"[\U0001F000-\U0001FFFF"
-        u"\U00002300-\U000027BF"
-        u"\U00002B00-\U00002BFF"
-        u"\U000024C2-\U0001F251"
-        u"\uFE00-\uFE0F"
-        u"\u200D"
-        u"\u20E3"
-        u"]+",
-        flags=re.UNICODE
-    )
-    texte = pattern.sub('', texte)
-    texte = re.sub(r'\uFE0F', '', texte)
-    return texte.strip()
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"
+        u"\U0001F300-\U0001F5FF"
+        u"\U0001F680-\U0001F9FF"
+        u"\U00002700-\U000027BF"
+        u"\U0001FA00-\U0001FA6F"
+        u"\U00002500-\U00002BEF"
+        u"\U0001F1E0-\U0001F1FF"
+        u"\U00002702-\U000027B0"
+        "]+", flags=re.UNICODE)
+    return emoji_pattern.sub('', texte).strip()
 
 app = Flask(__name__)
 app.secret_key = "nicheai_secret_2024"
@@ -54,8 +51,9 @@ def generer():
     session['objectif'] = objectif
 
     prompt_gratuit = f"""Tu es un consultant expert en positionnement freelance.
-REGLES ABSOLUES : zero emoji, zero symbole, zero etoile, zero icone. Uniquement du texte brut.
-Les titres sont en majuscules precedes d'un #.
+Reponds de maniere sobre, directe et professionnelle.
+N'utilise AUCUN emoji, aucun symbole decoratif, aucune etoile, aucun caractere special.
+Utilise uniquement du texte brut avec des titres en majuscules.
 
 Profil :
 - Competences : {competences}
@@ -64,26 +62,26 @@ Profil :
 - Client cible : {client_type}
 - Objectif mensuel : {objectif}EUR
 
-Redige exactement ces trois sections :
+Redige un rapport avec exactement ces sections, titres en majuscules avec # :
 
 # NICHE RECOMMANDEE
-Un paragraphe precis sur le positionnement ideal.
+Un paragraphe precis et percutant sur le positionnement ideal.
 
 # PITCH LINKEDIN
-3-4 phrases, arrête avant la conclusion.
+3-4 phrases, arrête-toi avant la conclusion pour donner envie d'en savoir plus.
 
 # FOURCHETTE TARIFAIRE
-Une seule ligne.
+Une ligne uniquement, fourchette vague.
 
 ---
 
 # RAPPORT COMPLET — ACCES RESTREINT
 
-Plateforme recommandee n1 : ██████████
+Plateforme recommandee n°1 : ██████████
 Mots-cles de visibilite : ██████ · ██████ · ██████
-Plan semaine 1 : ██████████████████
+Plan d'action — Semaine 1 : ██████████████████
 
-Debloque l'analyse complete pour tout voir."""
+Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     message_gratuit = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -92,6 +90,7 @@ Debloque l'analyse complete pour tout voir."""
     )
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
+
     return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
 @app.route("/paiement")
@@ -131,8 +130,9 @@ def success():
         return redirect(url_for('index'))
 
     prompt_premium = f"""Tu es un consultant senior en positionnement freelance.
-REGLES ABSOLUES : zero emoji, zero symbole, zero etoile, zero icone. Uniquement du texte brut.
-Les titres sont en majuscules precedes d'un #.
+Reponds de maniere sobre, directe et professionnelle.
+N'utilise AUCUN emoji, aucun symbole decoratif, aucune etoile, aucun caractere special.
+Utilise uniquement du texte brut avec des titres en majuscules.
 
 Profil :
 - Competences : {competences}
@@ -141,12 +141,12 @@ Profil :
 - Client cible : {client_type}
 - Objectif mensuel : {objectif}EUR
 
-Utilise la recherche web pour des donnees reelles et actuelles.
+Utilise la recherche web pour obtenir des donnees reelles et actuelles sur les tarifs, la demande et les profils qui reussissent.
 
-Redige ces sections avec titres # en majuscules :
+Redige un rapport complet avec ces sections, titres en majuscules avec # :
 
 # ANALYSE DE MARCHE
-Donnees reelles : tarifs constates, volume de demande, tendances.
+Donnees reelles : tarifs constates, volume de demande, tendances actuelles.
 
 # NICHE RECOMMANDEE
 Positionnement ultra-precis avec justification marche.
@@ -158,13 +158,13 @@ Texte complet pret a copier-coller.
 TJM et forfaits bases sur le marche reel.
 
 # TOP 3 PLATEFORMES
-Strategie concrete pour chacune.
+Avec strategie concrete pour chacune.
 
 # MOTS-CLES DE VISIBILITE
-5 mots-cles reels.
+5 mots-cles reels recherches par tes futurs clients.
 
 # PLAN D'ACTION 30 JOURS
-Semaine par semaine.
+Semaine par semaine, actions concretes.
 
 # TEMPLATE DE PROSPECTION
 Message pret a envoyer.
@@ -215,7 +215,7 @@ def chat():
     reponse = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=500,
-        messages=[{"role": "user", "content": f"Rapport:\n{rapport}\n\nQuestion: {question}\n\nReponds sans emoji, de maniere sobre et professionnelle."}]
+        messages=[{"role": "user", "content": f"Voici le rapport freelance:\n{rapport}\n\nQuestion: {question}\n\nReponds de maniere sobre et professionnelle, sans emoji."}]
     )
     return {"reponse": supprimer_emojis(reponse.content[0].text)}
 
