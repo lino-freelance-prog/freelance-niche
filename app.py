@@ -90,6 +90,7 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
     )
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
+    session['rapport_complet'] = rapport_gratuit
 
     return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
