@@ -3,6 +3,7 @@ import anthropic
 import stripe
 import os
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
