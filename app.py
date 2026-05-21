@@ -284,8 +284,6 @@ def premium_result():
         return redirect(url_for('index'))
     return render_template('resultat.html', rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
-@app.route('/code-promo', methods=['POST'])
-def code_promo():
     from flask import jsonify
     data = request.get_json()
     code = data.get('code', '').strip().upper()
