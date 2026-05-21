@@ -228,3 +228,11 @@ def chat():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+@app.route('/preview-premium')
+def preview_premium():
+    competences = session.get('competences')
+    if not competences:
+        return redirect(url_for('index'))
+    rapport = generer_rapport_premium(competences, session.get('secteur'), session.get('experience'), session.get('client_type'), session.get('objectif'))
+    return render_template('resultat.html', rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
