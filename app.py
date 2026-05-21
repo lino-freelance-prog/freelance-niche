@@ -33,6 +33,18 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 def envoyer_email(destinataire, rapport):
     print(f"Email a envoyer a {destinataire}")
  
+def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif):
+    prompt = f"""Tu es consultant senior en positionnement freelance. Sans emoji. Titres majuscules avec #.
+
+Profil: competences={competences}, secteur={secteur}, experience={experience}, client={client_type}, objectif={objectif}EUR
+
+Rapport complet: # ANALYSE DE MARCHE, # NICHE RECOMMANDEE, # PITCH LINKEDIN, # TARIFICATION, # TOP 3 PLATEFORMES, # MOTS-CLES, # PLAN 30 JOURS, # TEMPLATE PROSPECTION, # SCRIPT APPEL, # PROFILS REFERENCE. Concret et actionnable."""
+    try:
+        r = client.messages.create(model="claude-haiku-4-5-20251001", max_tokens=3000, messages=[{"role":"user","content":prompt}])
+        return supprimer_emojis(r.content[0].text)
+    except:
+        return "Service surcharge. Reessayez."
+
 def generer_rapport_premium(competences, secteur, experience, client_type, objectif):
     prompt_premium = f"""Tu es un consultant senior en positionnement freelance.
 Reponds de maniere sobre, directe et professionnelle.
