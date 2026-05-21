@@ -36,6 +36,18 @@ client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 
+
+def generer_rapport_premium(competences, secteur, experience, client_type, objectif):
+    prompt = f"""Tu es un consultant senior en positionnement freelance. N utilisez aucun emoji. Titres en majuscules avec #.
+Profil : competences={competences}, secteur={secteur}, experience={experience}, client={client_type}, objectif={objectif}EUR
+Utilise la recherche web. Redige un rapport complet : ANALYSE DE MARCHE, NICHE RECOMMANDEE, PITCH LINKEDIN, TARIFICATION, TOP 3 PLATEFORMES, MOTS-CLES, PLAN 30 JOURS, TEMPLATE PROSPECTION, SCRIPT APPEL, PROFILS REFERENCE, OPPORTUNITES CACHEES. En francais, concret et actionnable."""
+    try:
+        response = client.messages.create(model="claude-sonnet-4-6", max_tokens=4000, tools=[{"type": "web_search_20250305", "name": "web_search"}], messages=[{"role": "user", "content": prompt}])
+        rapport = "".join(block.text for block in response.content if block.type == "text")
+        return supprimer_emojis(rapport)
+    except Exception as e:
+        return "Service surcharge. Reessayez."
+
 def envoyer_email(destinataire, rapport):
     print(f"Email a envoyer a {destinataire}")
 
