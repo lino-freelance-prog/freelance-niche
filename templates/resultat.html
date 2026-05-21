@@ -677,6 +677,34 @@ nav {
 </div>
 
 <script>
+
+async function appliquerCode() {
+    var code = document.getElementById('promo-input').value.trim();
+    var msg = document.getElementById('promo-msg');
+    var btn = document.querySelector('.promo-btn');
+    btn.textContent = 'Verification...';
+    btn.disabled = true;
+    try {
+        var res = await fetch('/code-promo', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});
+        var data = await res.json();
+        if (data.success) {
+            msg.textContent = 'Code valide - generation en cours...';
+            msg.className = 'promo-msg success';
+            setTimeout(function(){ window.location.href = '/premium-result'; }, 1000);
+        } else {
+            msg.textContent = data.message || 'Code invalide';
+            msg.className = 'promo-msg error';
+            btn.textContent = 'Appliquer';
+            btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = 'Erreur. Reessayez.';
+        msg.className = 'promo-msg error';
+        btn.textContent = 'Appliquer';
+        btn.disabled = false;
+    }
+}
+
 var rapportData = {{ rapport | tojson }};
 var isPremium = {{ 'true' if premium else 'false' }};
 var questionsUsed = 0;
