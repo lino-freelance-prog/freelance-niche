@@ -90,7 +90,6 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
     )
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
-    session['rapport_complet'] = rapport_gratuit
 
     return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
@@ -223,10 +222,3 @@ def chat():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
-@app.route('/preview-premium')
-def preview_premium():
-    rapport = session.get('rapport_complet')
-    if not rapport:
-        return redirect(url_for('index'))
-    return render_template('resultat.html', rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
