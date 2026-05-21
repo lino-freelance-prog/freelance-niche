@@ -243,6 +243,8 @@ if __name__ == "__main__":
 
 @app.route('/preview-premium')
 def preview_premium():
+    if request.args.get("code") != "LINO1811":
+        return redirect(url_for("index"))
     competences = session.get('competences')
     if not competences:
         return redirect(url_for('index'))
