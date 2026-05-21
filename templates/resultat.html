@@ -41,6 +41,34 @@ async function appliquerCode() {
     }
 }
 
+
+async function appliquerCode() {
+    var code = document.getElementById("promo-input").value.trim();
+    var msg = document.getElementById("promo-msg");
+    var btn = document.querySelector(".promo-btn");
+    btn.textContent = "Verification...";
+    btn.disabled = true;
+    try {
+        var res = await fetch("/code-promo", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code:code})});
+        var data = await res.json();
+        if (data.success) {
+            msg.textContent = "Code valide - generation en cours (30 sec)...";
+            msg.className = "promo-msg success";
+            setTimeout(function(){ window.location.href = "/premium-result"; }, 1000);
+        } else {
+            msg.textContent = data.message || "Code invalide";
+            msg.className = "promo-msg error";
+            btn.textContent = "Appliquer";
+            btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = "Erreur. Reessayez.";
+        msg.className = "promo-msg error";
+        btn.textContent = "Appliquer";
+        btn.disabled = false;
+    }
+}
+
 </script>
 <style>
 :root {
@@ -477,6 +505,15 @@ nav {
 .promo-btn { padding: 12px 20px; background: rgba(109,40,255,0.15); color: var(--purple-light); border: 1px solid rgba(109,40,255,0.3); border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'Outfit', sans-serif; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
 .promo-btn:hover { background: rgba(109,40,255,0.25); }
 .promo-msg { font-size: 13px; margin-bottom: 12px; min-height: 18px; position: relative; }
+.promo-msg.error { color: #ef4444; }
+.promo-msg.success { color: #34D399; }
+
+
+.promo-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.promo-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--text); font-family: DM Sans, sans-serif; outline: none; }
+.promo-input:focus { border-color: rgba(109,40,255,0.4); }
+.promo-btn { padding: 12px 20px; background: rgba(109,40,255,0.15); color: var(--purple-light); border: 1px solid rgba(109,40,255,0.3); border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.promo-msg { font-size: 13px; margin-bottom: 12px; min-height: 18px; }
 .promo-msg.error { color: #ef4444; }
 .promo-msg.success { color: #34D399; }
 
