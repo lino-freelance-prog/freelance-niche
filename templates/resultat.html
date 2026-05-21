@@ -6,7 +6,42 @@
 <title>Votre rapport — NicheAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js">
+async function appliquerCode() {
+    const code = document.getElementById("promo-input").value.trim();
+    const msg = document.getElementById("promo-msg");
+    const btn = document.querySelector(".promo-btn");
+    if (!code) { msg.textContent = "Entrez un code promo"; msg.className = "promo-msg error"; return; }
+    btn.textContent = "Vérification...";
+    btn.disabled = true;
+    msg.textContent = "";
+    try {
+        const res = await fetch("/code-promo", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({code})
+        });
+        const data = await res.json();
+        if (data.success) {
+            msg.textContent = "Code valide — génération en cours (30 sec)...";
+            msg.className = "promo-msg success";
+            document.getElementById("btn-pay").style.display = "none";
+            setTimeout(() => { window.location.href = "/premium-result"; }, 1000);
+        } else {
+            msg.textContent = data.message || "Code invalide";
+            msg.className = "promo-msg error";
+            btn.textContent = "Appliquer";
+            btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = "Erreur. Réessayez.";
+        msg.className = "promo-msg error";
+        btn.textContent = "Appliquer";
+        btn.disabled = false;
+    }
+}
+
+</script>
 <style>
 :root {
   --bg: #0B0B0F;
@@ -427,6 +462,24 @@ nav {
 .send-btn:hover { box-shadow: 0 0 40px var(--purple-glow); }
 .send-btn:disabled { background: #1a1a2e; color: #333; cursor: not-allowed; box-shadow: none; }
 
+.promo-row { display: flex; gap: 8px; margin-bottom: 16px; position: relative; }
+.promo-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--text); font-family: "DM Sans", sans-serif; outline: none; transition: border 0.2s; }
+.promo-input:focus { border-color: rgba(109,40,255,0.4); }
+.promo-btn { padding: 12px 20px; background: rgba(109,40,255,0.15); color: var(--purple-light); border: 1px solid rgba(109,40,255,0.3); border-radius: 10px; font-size: 13px; font-weight: 600; font-family: "Outfit", sans-serif; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.promo-btn:hover { background: rgba(109,40,255,0.25); }
+.promo-msg { font-size: 13px; margin-bottom: 12px; min-height: 18px; position: relative; }
+.promo-msg.error { color: #ef4444; }
+.promo-msg.success { color: #34D399; }
+
+.promo-row { display: flex; gap: 8px; margin-bottom: 16px; position: relative; }
+.promo-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 14px; color: var(--text); font-family: 'DM Sans', sans-serif; outline: none; transition: border 0.2s; }
+.promo-input:focus { border-color: rgba(109,40,255,0.4); }
+.promo-btn { padding: 12px 20px; background: rgba(109,40,255,0.15); color: var(--purple-light); border: 1px solid rgba(109,40,255,0.3); border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'Outfit', sans-serif; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.promo-btn:hover { background: rgba(109,40,255,0.25); }
+.promo-msg { font-size: 13px; margin-bottom: 12px; min-height: 18px; position: relative; }
+.promo-msg.error { color: #ef4444; }
+.promo-msg.success { color: #34D399; }
+
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 @keyframes r1 { from{transform:rotateY(0)} to{transform:rotateY(360deg)} }
 @keyframes r2 { from{transform:rotateX(0) rotateY(60deg)} to{transform:rotateX(360deg) rotateY(60deg)} }
@@ -516,7 +569,12 @@ nav {
       <div class="price-sub">Paiement unique<br>Accès à vie</div>
     </div>
 
-    <a href="/paiement" class="btn-premium">Débloquer le rapport complet</a>
+    <div class="promo-row">
+      <input type="text" id="promo-input" placeholder="Code promo ?" class="promo-input">
+      <button onclick="appliquerCode()" class="promo-btn">Appliquer</button>
+    </div>
+    <div id="promo-msg" class="promo-msg"></div>
+    <a href="/paiement" class="btn-premium" id="btn-pay">Débloquer le rapport complet</a>
     <div class="premium-note">Paiement sécurisé · Accès immédiat · Satisfait ou remboursé</div>
   </div>
   {% endif %}
