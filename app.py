@@ -263,8 +263,6 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
 
-@app.route('/code-promo', methods=['POST'])
-def code_promo():
     from flask import jsonify
     data = request.get_json()
     code = data.get('code', '').strip().upper()
