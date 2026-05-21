@@ -283,3 +283,24 @@ def premium_result():
     if not rapport:
         return redirect(url_for('index'))
     return render_template('resultat.html', rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
+
+@app.route('/code-promo', methods=['POST'])
+def code_promo():
+    from flask import jsonify
+    data = request.get_json()
+    code = data.get('code', '').strip().upper()
+    if code != 'LINO1811':
+        return jsonify({'success': False, 'message': 'Code invalide'})
+    competences = session.get('competences')
+    if not competences:
+        return jsonify({'success': False, 'message': 'Session expiree, regenerez votre rapport'})
+    rapport = generer_rapport_premium_rapide(competences, session.get('secteur'), session.get('experience'), session.get('client_type'), session.get('objectif'))
+    session['rapport_complet'] = rapport
+    return jsonify({'success': True})
+
+@app.route('/premium-result')
+def premium_result():
+    rapport = session.get('rapport_complet')
+    if not rapport:
+        return redirect(url_for('index'))
+    return render_template('resultat.html', rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
