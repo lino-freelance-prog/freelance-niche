@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js">
+<script>
+var USER_DATA = {
+  competences: '{{ competences|default("") }}',
+  secteur: '{{ secteur|default("") }}',
+  experience: '{{ experience|default("") }}',
+  client_type: '{{ client_type|default("") }}',
+  objectif: '{{ objectif|default("") }}'
+};
+</script>
 async function appliquerCode() {
     const code = document.getElementById("promo-input").value.trim();
     const msg = document.getElementById("promo-msg");
@@ -685,7 +694,7 @@ async function appliquerCode() {
     btn.textContent = 'Verification...';
     btn.disabled = true;
     try {
-        var res = await fetch('/code-promo', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});
+        var res = await fetch('/code-promo', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({code:code}, USER_DATA))});
         var data = await res.json();
         if (data.success) {
             msg.textContent = 'Code valide - generation en cours...';
