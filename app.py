@@ -93,6 +93,42 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
+
+@app.route("/code-promo", methods=["POST"])
+def code_promo():
+    from flask import jsonify
+    data = request.get_json()
+    code = data.get("code", "").strip().upper()
+    if code != "LINO1811":
+        return jsonify({"success": False, "message": "Code invalide"})
+    session["premium_unlocked"] = True
+    session.modified = True
+    return jsonify({"success": True})
+
+
+@app.route("/premium-result")
+def premium_result():
+    rapport = session.get("rapport_complet")
+    if not rapport:
+        competences = session.get("competences", "")
+        if not competences:
+            return redirect(url_for("index"))
+        from flask import Flask
+        import anthropic as ac
+        cl = ac.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        try:
+            r = cl.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=3000,
+                messages=[{"role": "user", "content": f"Rapport premium freelance pour: competences={competences}, secteur={session.get('secteur','')}, experience={session.get('experience','')}, client={session.get('client_type','')}, objectif={session.get('objectif','')}EUR. Sections: ANALYSE MARCHE, NICHE, PITCH LINKEDIN, TARIFS, PLATEFORMES, MOTS-CLES, PLAN 30J, TEMPLATE PROSPECTION. En francais."}]
+            )
+            rapport = r.content[0].text
+        except:
+            rapport = "Erreur generation. Reessayez."
+        session["rapport_complet"] = rapport
+        session.modified = True
+    return render_template("resultat.html", rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
+
 @app.route("/paiement")
 def paiement():
     try:
