@@ -715,7 +715,39 @@ document.getElementById("rapport").innerHTML = marked.parse(rapportData);
 function exportPDF() {
   var contenu = document.getElementById("rapport").innerHTML;
   var fenetre = window.open('', '_blank');
-  fenetre.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"DM Sans",sans-serif;background:#0B0B0F;color:#C8C2B8;padding:52px;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:300;}.header{border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:24px;margin-bottom:40px;display:flex;justify-content:space-between;align-items:flex-end;}.logo{font-family:"Outfit",sans-serif;font-size:22px;font-weight:800;color:white;}.subtitle{font-size:11px;color:#555;letter-spacing:0.1em;text-transform:uppercase;}.content h1{font-family:"Outfit",sans-serif;font-size:10px;font-weight:700;color:#8B5CF6;margin:36px 0 14px;letter-spacing:0.2em;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid rgba(109,40,255,0.15);}h1:first-child{margin-top:0;}h2{font-family:"Outfit",sans-serif;font-size:18px;font-weight:700;color:white;margin:22px 0 10px;letter-spacing:-0.02em;}h3{font-size:11px;color:#555;margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.1em;}p{margin-bottom:14px;line-height:1.9;font-size:14px;font-weight:300;}strong{color:white;font-weight:500;}ul,ol{margin:10px 0 16px;list-style:none;padding:0;}li{margin-bottom:10px;padding-left:20px;position:relative;font-size:14px;line-height:1.75;font-weight:300;}ul li::before{content:"—";position:absolute;left:0;color:#8B5CF6;}ol{counter-reset:item;}ol li{counter-increment:item;}ol li::before{content:counter(item)".";position:absolute;left:0;color:#8B5CF6;font-weight:700;}table{width:100%;border-collapse:collapse;margin:18px 0;}th{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#8B5CF6;padding:10px 14px;border-bottom:1px solid rgba(109,40,255,0.15);text-align:left;}td{padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05);color:#C8C2B8;font-weight:300;}hr{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:30px 0;}.footer{margin-top:52px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);font-size:11px;color:#333;display:flex;justify-content:space-between;letter-spacing:0.04em;}</style></head><body><div class="header"><div class="logo">NicheAI</div><div class="subtitle">Rapport Premium · nicheai.fr</div></div><div class="content">' + contenu + '</div><div class="footer"><span>NicheAI — nicheai.fr</span><span>Rapport généré par intelligence artificielle</span></div><script>window.onload=function(){setTimeout(function(){window.print();},600);};<\/script></body></html>');
+  fenetre.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"DM Sans",sans-serif;background:#0B0B0F;color:#C8C2B8;padding:52px;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-weight:300;}.header{border-bottom:1px solid rgba(255,255,255,0.07);padding-bottom:24px;margin-bottom:40px;display:flex;justify-content:space-between;align-items:flex-end;}.logo{font-family:"Outfit",sans-serif;font-size:22px;font-weight:800;color:white;}.subtitle{font-size:11px;color:#555;letter-spacing:0.1em;text-transform:uppercase;}.content h1{font-family:"Outfit",sans-serif;font-size:10px;font-weight:700;color:#8B5CF6;margin:36px 0 14px;letter-spacing:0.2em;text-transform:uppercase;padding-bottom:10px;border-bottom:1px solid rgba(109,40,255,0.15);}h1:first-child{margin-top:0;}h2{font-family:"Outfit",sans-serif;font-size:18px;font-weight:700;color:white;margin:22px 0 10px;letter-spacing:-0.02em;}h3{font-size:11px;color:#555;margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.1em;}p{margin-bottom:14px;line-height:1.9;font-size:14px;font-weight:300;}strong{color:white;font-weight:500;}ul,ol{margin:10px 0 16px;list-style:none;padding:0;}li{margin-bottom:10px;padding-left:20px;position:relative;font-size:14px;line-height:1.75;font-weight:300;}ul li::before{content:"—";position:absolute;left:0;color:#8B5CF6;}ol{counter-reset:item;}ol li{counter-increment:item;}ol li::before{content:counter(item)".";position:absolute;left:0;color:#8B5CF6;font-weight:700;}table{width:100%;border-collapse:collapse;margin:18px 0;}th{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#8B5CF6;padding:10px 14px;border-bottom:1px solid rgba(109,40,255,0.15);text-align:left;}td{padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05);color:#C8C2B8;font-weight:300;}hr{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:30px 0;}.footer{margin-top:52px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);font-size:11px;color:#333;display:flex;justify-content:space-between;letter-spacing:0.04em;}</style></head><body><div class="header"><div class="logo">NicheAI</div><div class="subtitle">Rapport Premium · nicheai.fr</div></div><div class="content">' + contenu + '</div><div class="footer"><span>NicheAI — nicheai.fr</span><span>Rapport généré par intelligence artificielle</span></div><script>window.onload=function(){setTimeout(function(){window.print();},600);};<\/script>
+<script>
+async function appliquerCode() {
+    var code = document.getElementById('promo-input').value.trim();
+    var msg = document.getElementById('promo-msg');
+    var btn = document.querySelector('.promo-btn');
+    btn.textContent = 'Verification...';
+    btn.disabled = true;
+    try {
+        var res = await fetch('/code-promo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({code: code})
+        });
+        var data = await res.json();
+        if (data.success) {
+            msg.textContent = 'Code valide !';
+            msg.style.color = 'green';
+            setTimeout(function(){ window.location.href = '/premium-result'; }, 800);
+        } else {
+            msg.textContent = data.message || 'Code invalide';
+            msg.style.color = 'red';
+            btn.textContent = 'Appliquer';
+            btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = 'Erreur reseau.';
+        btn.textContent = 'Appliquer';
+        btn.disabled = false;
+    }
+}
+</script>
+</body></html>');
   fenetre.document.close();
 }
 
@@ -772,6 +804,38 @@ async function sendMessage() {
       if (counter) counter.textContent = remaining + " question gratuite restante";
     }
   } else { btn.disabled = false; }
+}
+</script>
+
+<script>
+async function appliquerCode() {
+    var code = document.getElementById('promo-input').value.trim();
+    var msg = document.getElementById('promo-msg');
+    var btn = document.querySelector('.promo-btn');
+    btn.textContent = 'Verification...';
+    btn.disabled = true;
+    try {
+        var res = await fetch('/code-promo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({code: code})
+        });
+        var data = await res.json();
+        if (data.success) {
+            msg.textContent = 'Code valide !';
+            msg.style.color = 'green';
+            setTimeout(function(){ window.location.href = '/premium-result'; }, 800);
+        } else {
+            msg.textContent = data.message || 'Code invalide';
+            msg.style.color = 'red';
+            btn.textContent = 'Appliquer';
+            btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = 'Erreur reseau.';
+        btn.textContent = 'Appliquer';
+        btn.disabled = false;
+    }
 }
 </script>
 </body>
