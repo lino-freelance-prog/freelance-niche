@@ -93,6 +93,36 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
+
+@app.route("/code-promo", methods=["POST"])
+def code_promo():
+    data = request.get_json()
+    code = data.get("code", "").strip().upper()
+    if code != "LINO1811":
+        return jsonify({"success": False, "message": "Code invalide"})
+    session["premium_unlocked"] = True
+    session.modified = True
+    return jsonify({"success": True})
+
+
+@app.route("/premium-result")
+def premium_result():
+    rapport = session.get("rapport_complet")
+    if not rapport:
+        competences = session.get("competences", "")
+        if not competences:
+            return redirect(url_for("index"))
+        rapport = generer_rapport_premium_rapide(
+            competences,
+            session.get("secteur", ""),
+            session.get("experience", ""),
+            session.get("client_type", ""),
+            session.get("objectif", "")
+        )
+        session["rapport_complet"] = rapport
+        session.modified = True
+    return render_template("resultat.html", rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
+
 @app.route("/paiement")
 def paiement():
     try:
