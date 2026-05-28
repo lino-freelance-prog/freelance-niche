@@ -30,6 +30,20 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 def envoyer_email(destinataire, rapport):
     print(f"Email a envoyer a {destinataire}")
 
+
+def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif):
+    import anthropic as ac
+    cl = ac.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    prompt = f"""Rapport premium freelance. Sans emoji. Titres avec #.
+Profil: competences={competences}, secteur={secteur}, experience={experience}, client={client_type}, objectif={objectif}EUR
+Sections: # ANALYSE DE MARCHE, # NICHE RECOMMANDEE, # PITCH LINKEDIN, # TARIFICATION, # TOP 3 PLATEFORMES, # MOTS-CLES SEO, # PLAN 30 JOURS, # TEMPLATE PROSPECTION, # SCRIPT APPEL, # PROFILS REFERENCE
+En francais, concret."""
+    try:
+        r = cl.messages.create(model="claude-haiku-4-5-20251001", max_tokens=3000, messages=[{"role":"user","content":prompt}])
+        return r.content[0].text
+    except Exception as e:
+        return f"Erreur generation: {str(e)}"
+
 @app.route("/")
 def index():
     return render_template("index.html")
