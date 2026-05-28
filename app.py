@@ -137,6 +137,19 @@ def premium_result():
         session.modified = True
     return render_template("resultat.html", rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
+
+@app.route("/mentions-legales")
+def mentions_legales():
+    return render_template("mentions-legales.html")
+
+@app.route("/cgv")
+def cgv():
+    return render_template("cgv.html")
+
+@app.route("/confidentialite")
+def confidentialite():
+    return render_template("confidentialite.html")
+
 @app.route("/paiement")
 def paiement():
     try:
