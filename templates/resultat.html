@@ -3,188 +3,676 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Votre rapport - NicheAI</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Votre rapport — NicheAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"DM Sans",sans-serif;background:#0A0A0F;color:#ccc;min-height:100vh;}
-.nav{display:flex;justify-content:space-between;align-items:center;padding:20px 40px;border-bottom:1px solid rgba(255,255,255,0.06);}
-.logo{font-family:"Syne",sans-serif;font-size:20px;font-weight:900;color:#fff;}
-.logo span{color:#8B5CF6;}
-.nav-link{color:#666;font-size:14px;text-decoration:none;}
-.nav-link:hover{color:#fff;}
-.container{max-width:780px;margin:0 auto;padding:48px 20px;}
-.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);color:#A78BFA;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px;}
-.badge-dot{width:6px;height:6px;background:#8B5CF6;border-radius:50%;}
-.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px;margin-bottom:24px;}
-.card-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
-.card-title{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:24px;}
-.divider{height:1px;background:rgba(255,255,255,0.06);margin:0 0 24px;}
-.rapport-content{line-height:1.85;font-size:15px;color:#aaa;}
-.rapport-content h1,.rapport-content h2,.rapport-content h3{font-family:"Syne",sans-serif;font-size:13px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 10px;}
-.rapport-content p{margin-bottom:14px;color:#bbb;}
-.rapport-content ul,.rapport-content ol{margin:8px 0 14px 20px;}
-.rapport-content li{margin-bottom:6px;}
-.rapport-content strong{color:#E2E8F0;}
-.rapport-content hr{border:none;border-top:1px solid rgba(255,255,255,0.06);margin:24px 0;}
-.premium-section{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(109,40,217,0.05));border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:40px 36px;margin-bottom:24px;text-align:center;}
-.premium-section h2{font-family:"Syne",sans-serif;font-size:26px;font-weight:800;color:#fff;margin-bottom:10px;}
-.premium-section>p{font-size:15px;color:#666;margin-bottom:32px;}
-.features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;text-align:left;}
-.feature{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 16px;font-size:13px;color:#aaa;}
-.feature::before{content:"✓";color:#8B5CF6;font-weight:700;flex-shrink:0;}
-.price{font-family:"Syne",sans-serif;font-size:52px;font-weight:900;color:#fff;line-height:1;}
-.price-sub{font-size:13px;color:#555;margin-top:6px;margin-bottom:28px;}
-.promo-wrap{margin-bottom:20px;}
-.promo-row{display:flex;gap:8px;max-width:360px;margin:0 auto 8px;}
-.promo-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:13px 16px;color:#fff;font-size:14px;font-family:"DM Sans",sans-serif;outline:none;}
-.promo-input:focus{border-color:#8B5CF6;}
-.promo-btn{background:#8B5CF6;color:#fff;border:none;border-radius:10px;padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer;}
-.promo-btn:hover{background:#7C3AED;}
-.promo-btn:disabled{opacity:0.5;}
-.promo-msg{font-size:13px;min-height:20px;}
-.promo-msg.success{color:#4ade80;}
-.promo-msg.error{color:#f87171;}
-.cta-btn{display:block;max-width:360px;margin:0 auto 12px;background:linear-gradient(135deg,#8B5CF6,#7C3AED);color:#fff;border:none;border-radius:12px;padding:16px 24px;font-family:"Syne",sans-serif;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;}
-.cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,92,246,0.35);}
-.cta-hint{font-size:12px;color:#444;}
-.premium-actions{display:flex;gap:10px;margin-bottom:28px;}
-.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#888;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
-.btn-outline:hover{border-color:#8B5CF6;color:#A78BFA;}
-.btn-violet{background:#8B5CF6;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;}
-.chat-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:32px;}
-.chat-card h3{font-family:"Syne",sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;}
-.chat-card>p{font-size:13px;color:#555;margin-bottom:20px;}
-.suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
-.sugg-btn{background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);color:#A78BFA;border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer;}
-.sugg-btn:hover{background:rgba(139,92,246,0.15);}
-.messages{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.msg{padding:12px 16px;border-radius:10px;font-size:14px;line-height:1.6;}
-.msg.user{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);color:#E2E8F0;align-self:flex-end;max-width:85%;}
-.msg.ai{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#bbb;}
-.msg.loading{color:#555;font-style:italic;}
-.chat-row{display:flex;gap:8px;}
-.chat-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;color:#fff;font-size:14px;font-family:"DM Sans",sans-serif;outline:none;}
-.chat-input:focus{border-color:#8B5CF6;}
-.send-btn{background:#8B5CF6;color:#fff;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;}
-.send-btn:disabled{opacity:0.4;}
-.counter{font-size:12px;color:#555;margin-top:8px;}
-@media(max-width:600px){.features{grid-template-columns:1fr;}.price{font-size:40px;}.card{padding:24px 20px;}.premium-section{padding:28px 20px;}}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #08080F;
+  --surface: #0F0F1A;
+  --surface2: #14141F;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(139,92,246,0.4);
+  --violet: #8B5CF6;
+  --violet-light: #A78BFA;
+  --violet-dim: rgba(139,92,246,0.12);
+  --text: #E2E8F0;
+  --text-muted: #64748B;
+  --text-dim: #94A3B8;
+  --green: #4ADE80;
+  --red: #F87171;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  height: 64px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(8,8,15,0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.logo span { color: var(--violet); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-link {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+.nav-link:hover { color: var(--text); }
+
+/* ── LAYOUT ── */
+.page { max-width: 800px; margin: 0 auto; padding: 52px 24px 80px; }
+
+/* ── HEADER SECTION ── */
+.report-header { margin-bottom: 40px; }
+.report-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.chip-free {
+  background: rgba(100,116,139,0.15);
+  border: 1px solid rgba(100,116,139,0.25);
+  color: #94A3B8;
+}
+.chip-premium {
+  background: rgba(139,92,246,0.15);
+  border: 1px solid rgba(139,92,246,0.35);
+  color: var(--violet-light);
+}
+.chip-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.8;
+}
+.report-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.report-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ── REPORT CARD ── */
+.report-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.report-card-inner { padding: 36px; }
+
+/* ── MARKDOWN ── */
+.md h1, .md h2, .md h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--violet-light);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 28px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.md h1:first-child, .md h2:first-child, .md h3:first-child { margin-top: 0; }
+.md p { font-size: 15px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.75; }
+.md ul, .md ol { margin: 8px 0 12px 20px; }
+.md li { font-size: 15px; color: var(--text-dim); margin-bottom: 6px; line-height: 1.7; }
+.md strong { color: var(--text); font-weight: 600; }
+.md hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+.md code { background: var(--violet-dim); color: var(--violet-light); padding: 2px 7px; border-radius: 4px; font-size: 13px; }
+
+/* ── BLUR FOOTER (free) ── */
+.blur-footer {
+  padding: 32px 36px;
+  background: linear-gradient(to bottom, transparent, var(--surface) 60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+}
+.blur-lines { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-bottom: 12px; }
+.blur-line {
+  height: 10px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+}
+
+/* ── UNLOCK SECTION ── */
+.unlock-section {
+  background: var(--surface);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: var(--radius);
+  padding: 40px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.unlock-section::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.unlock-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--violet);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.unlock-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.unlock-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  max-width: 440px;
+}
+
+/* ── FEATURES ── */
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: border-color .2s;
+}
+.feat:hover { border-color: var(--border-hover); color: var(--text); }
+.feat-check {
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  background: var(--violet-dim);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--violet);
+}
+
+/* ── PRICE ── */
+.price-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.price-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.price-info { padding-bottom: 4px; }
+.price-period { font-size: 13px; color: var(--text-muted); }
+.price-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── PROMO ── */
+.promo-block { margin-bottom: 16px; }
+.promo-row {
+  display: flex;
+  gap: 8px;
+  max-width: 380px;
+  margin-bottom: 8px;
+}
+.promo-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color .2s;
+  letter-spacing: 1px;
+}
+.promo-input::placeholder { color: var(--text-muted); letter-spacing: 0; }
+.promo-input:focus { border-color: var(--violet); }
+.promo-apply {
+  background: var(--violet);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  white-space: nowrap;
+}
+.promo-apply:hover { background: #7C3AED; }
+.promo-apply:active { transform: scale(0.98); }
+.promo-apply:disabled { opacity: 0.5; cursor: not-allowed; }
+.promo-msg {
+  font-size: 12px;
+  min-height: 16px;
+  padding-left: 2px;
+}
+.promo-msg.ok { color: var(--green); }
+.promo-msg.err { color: var(--red); }
+
+/* ── CTA ── */
+.cta-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 380px;
+  padding: 15px 24px;
+  background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+  letter-spacing: 0.2px;
+  box-shadow: 0 4px 20px rgba(139,92,246,0.25);
+  margin-bottom: 10px;
+}
+.cta-main:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(139,92,246,0.35);
+}
+.cta-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 380px;
+}
+
+/* ── PREMIUM ACTIONS ── */
+.premium-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-ghost:hover { border-color: var(--border-hover); color: var(--violet-light); }
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--violet-dim);
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--violet-light);
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-solid:hover { background: rgba(139,92,246,0.2); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* ── CHAT ── */
+.chat-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.chat-header { padding: 24px 28px 0; }
+.chat-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.chat-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 28px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sugg {
+  padding: 6px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .2s;
+}
+.sugg:hover { border-color: var(--border-hover); color: var(--violet-light); }
+.messages {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.messages:empty { display: none; }
+.msg { font-size: 14px; line-height: 1.7; }
+.msg.user {
+  align-self: flex-end;
+  max-width: 80%;
+  background: var(--violet-dim);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  color: var(--text);
+}
+.msg.ai {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  color: var(--text-dim);
+}
+.msg.loading { color: var(--text-muted); font-style: italic; padding: 0 0 4px; }
+.chat-footer { padding: 16px 28px 24px; }
+.chat-input-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.chat-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color .2s;
+}
+.chat-input:focus { border-color: var(--violet); }
+.chat-input::placeholder { color: var(--text-muted); }
+.chat-send {
+  background: var(--violet);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.chat-send:hover { background: #7C3AED; }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.chat-counter { font-size: 12px; color: var(--text-muted); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+@media (max-width: 640px) {
+  .nav { padding: 0 20px; }
+  .page { padding: 32px 16px 60px; }
+  .report-card-inner, .unlock-section, .chat-header, .chat-footer { padding: 24px 20px; }
+  .suggestions { padding: 0 20px 16px; }
+  .messages { padding: 16px 20px; }
+  .features { grid-template-columns: 1fr; }
+  .price-amount { font-size: 40px; }
+  .report-title { font-size: 22px; }
+}
 </style>
 </head>
 <body>
+
 <nav class="nav">
   <div class="logo">Niche<span>AI</span></div>
-  <a href="/" class="nav-link">&#8592; Nouveau rapport</a>
+  <div class="nav-right">
+    <a href="/" class="nav-link">&#8592; Nouveau rapport</a>
+  </div>
 </nav>
-<div class="container">
+
+<main class="page">
+
 {% if not premium %}
-<div class="badge"><div class="badge-dot"></div>Apercu gratuit - Analyse partielle</div>
-<div class="card">
-  <div class="card-label">Analyse de positionnement</div>
-  <div class="card-title">Apercu de votre rapport</div>
-  <div class="divider"></div>
-  <div class="rapport-content" id="rapport-content"></div>
-</div>
-<div class="premium-section">
-  <p style="font-size:11px;color:#8B5CF6;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;">Rapport complet</p>
-  <h2>Debloquez l'analyse strategique integrale</h2>
-  <p>Accedez aux donnees de marche reelles, votre plan d'action complet et tous les outils pour trouver vos premiers clients des cette semaine.</p>
-  <div class="features">
-    <div class="feature">Donnees marche en temps reel</div>
-    <div class="feature">Score de potentiel detaille</div>
-    <div class="feature">Top 3 plateformes + strategie</div>
-    <div class="feature">5 mots-cles SEO cibles</div>
-    <div class="feature">Plan d'action 30 jours</div>
-    <div class="feature">Template de prospection</div>
-    <div class="feature">Script d'appel client</div>
-    <div class="feature">Chat IA illimite + Export PDF</div>
-  </div>
-  <div class="price">19,90&#8364;</div>
-  <div class="price-sub">Paiement unique &middot; Acces a vie</div>
-  <div class="promo-wrap">
-    <div class="promo-row">
-      <input type="text" id="promo-input" class="promo-input" placeholder="Code promo" autocomplete="off">
-      <button class="promo-btn" onclick="appliquerCode()">Appliquer</button>
+
+  <div class="report-header">
+    <div class="report-meta">
+      <div class="chip chip-free"><div class="chip-dot"></div>Apercu gratuit</div>
     </div>
-    <div id="promo-msg" class="promo-msg"></div>
+    <h1 class="report-title">Apercu de votre positionnement</h1>
+    <p class="report-sub">Analyse partielle &mdash; les sections cles sont deverrouillees ci-dessous</p>
   </div>
-  <a href="/paiement" class="cta-btn">Debloquer le rapport complet</a>
-  <div class="cta-hint">Paiement securise &middot; Acces immediat &middot; Satisfait ou rembourse</div>
-</div>
+
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="md" id="rapport-content"></div>
+    </div>
+    <div class="blur-footer">
+      <div class="blur-lines">
+        <div class="blur-line" style="width:90%"></div>
+        <div class="blur-line" style="width:70%"></div>
+        <div class="blur-line" style="width:80%"></div>
+        <div class="blur-line" style="width:55%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="unlock-section">
+    <div class="unlock-label">Rapport complet</div>
+    <h2 class="unlock-title">Debloquez votre analyse strategique integrale</h2>
+    <p class="unlock-desc">Donnees de marche reelles, plan d'action semaine par semaine, templates prets a l'emploi &mdash; tout ce qu'il faut pour trouver vos premiers clients.</p>
+
+    <div class="features">
+      <div class="feat"><div class="feat-check">✓</div>Donnees marche en temps reel</div>
+      <div class="feat"><div class="feat-check">✓</div>Score de potentiel detaille</div>
+      <div class="feat"><div class="feat-check">✓</div>Top 3 plateformes + strategie</div>
+      <div class="feat"><div class="feat-check">✓</div>5 mots-cles SEO cibles</div>
+      <div class="feat"><div class="feat-check">✓</div>Plan d'action 30 jours</div>
+      <div class="feat"><div class="feat-check">✓</div>Template de prospection</div>
+      <div class="feat"><div class="feat-check">✓</div>Script d'appel client</div>
+      <div class="feat"><div class="feat-check">✓</div>Chat IA illimite + Export PDF</div>
+    </div>
+
+    <div class="price-row">
+      <div class="price-amount">19,90&#8364;</div>
+      <div class="price-info">
+        <div class="price-period">paiement unique</div>
+        <div class="price-note">acces a vie</div>
+      </div>
+    </div>
+
+    <div class="promo-block">
+      <div class="promo-row">
+        <input id="promo-input" class="promo-input" type="text" placeholder="Code promo" autocomplete="off" spellcheck="false">
+        <button class="promo-apply" onclick="appliquerCode()">Appliquer</button>
+      </div>
+      <div id="promo-msg" class="promo-msg"></div>
+    </div>
+
+    <a href="/paiement" class="cta-main">Deverrouiller le rapport complet</a>
+    <p class="cta-hint">Paiement securise &middot; Acces immediat &middot; Satisfait ou rembourse</p>
+  </div>
+
 {% endif %}
+
 {% if premium %}
-<div class="badge" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.5);color:#C4B5FD;"><div class="badge-dot"></div>Rapport premium</div>
-<div class="card">
-  <div class="card-label">Analyse de positionnement</div>
-  <div class="card-title">Rapport strategique complet</div>
-  <div class="premium-actions">
-    <a href="/" class="btn-outline">&#8592; Nouveau rapport</a>
-    <button class="btn-violet" onclick="exportPDF()">Exporter en PDF</button>
+
+  <div class="report-header">
+    <div class="report-meta">
+      <div class="chip chip-premium"><div class="chip-dot"></div>Premium</div>
+    </div>
+    <h1 class="report-title">Rapport strategique complet</h1>
+    <p class="report-sub">Analyse complete &mdash; toutes les sections sont disponibles</p>
   </div>
-  <div class="divider"></div>
-  <div class="rapport-content" id="rapport-content"></div>
-</div>
+
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="premium-actions">
+        <a href="/" class="btn-ghost">&#8592; Nouveau rapport</a>
+        <button class="btn-solid" onclick="exportPDF()">&#8595; Exporter PDF</button>
+      </div>
+      <div class="divider"></div>
+      <div class="md" id="rapport-content"></div>
+    </div>
+  </div>
+
 {% endif %}
-<div class="chat-card">
-  <h3>Assistant IA</h3>
-  <p>L'IA repond en tenant compte de votre profil et de votre marche specifique</p>
-  <div class="suggestions">
-    <button class="sugg-btn" onclick="sendSuggestion(this)">Comment trouver mes premiers clients ?</button>
-    <button class="sugg-btn" onclick="sendSuggestion(this)">Redige mon profil Malt</button>
-    <button class="sugg-btn" onclick="sendSuggestion(this)">Template de case study</button>
-    <button class="sugg-btn" onclick="sendSuggestion(this)">Comment negocier mon TJM ?</button>
+
+  <div class="chat-section">
+    <div class="chat-header">
+      <div class="chat-title">Assistant IA</div>
+      <div class="chat-sub">Posez vos questions &mdash; l'IA repond en fonction de votre profil</div>
+    </div>
+    <div class="suggestions">
+      <button class="sugg" onclick="useSugg(this)">Comment trouver mes premiers clients ?</button>
+      <button class="sugg" onclick="useSugg(this)">Redige mon profil Malt</button>
+      <button class="sugg" onclick="useSugg(this)">Template de case study</button>
+      <button class="sugg" onclick="useSugg(this)">Comment negocier mon TJM ?</button>
+    </div>
+    <div class="messages" id="msgs"></div>
+    <div class="chat-footer">
+      <div class="chat-input-row">
+        <input id="chat-input" class="chat-input" type="text" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter')send()">
+        <button id="send-btn" class="chat-send" onclick="send()">Envoyer</button>
+      </div>
+      {% if not premium %}<div class="chat-counter" id="counter">2 questions gratuites incluses</div>{% endif %}
+    </div>
   </div>
-  <div class="messages" id="chat-messages"></div>
-  <div class="chat-row">
-    <input type="text" id="chat-input" class="chat-input" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter')sendMessage()">
-    <button class="send-btn" id="send-btn" onclick="sendMessage()">Envoyer</button>
-  </div>
-  {% if not premium %}<div class="counter" id="counter">2 questions gratuites restantes</div>{% endif %}
-</div>
-</div>
+
+</main>
+
 <script>
-var rapportData={{ rapport|tojson }};
-var isPremium={{ 'true' if premium else 'false' }};
-var questionsUsed=0;
-document.getElementById('rapport-content').innerHTML=marked.parse(rapportData);
-async function appliquerCode(){
-  var code=document.getElementById('promo-input').value.trim();
-  var msg=document.getElementById('promo-msg');
-  var btn=document.querySelector('.promo-btn');
-  if(!code){msg.textContent='Entrez un code.';msg.className='promo-msg error';return;}
-  btn.textContent='Verification...';btn.disabled=true;
-  try{
-    var res=await fetch('/code-promo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});
-    var data=await res.json();
-    if(data.success){msg.textContent='Code valide ! Generation en cours...';msg.className='promo-msg success';setTimeout(function(){window.location.href='/premium-result';},1000);}
-    else{msg.textContent=data.message||'Code invalide';msg.className='promo-msg error';btn.textContent='Appliquer';btn.disabled=false;}
-  }catch(e){msg.textContent='Erreur reseau.';msg.className='promo-msg error';btn.textContent='Appliquer';btn.disabled=false;}
+var R = {{ rapport | tojson }};
+var P = {{ 'true' if premium else 'false' }};
+var Q = 0;
+
+document.getElementById('rapport-content').innerHTML = marked.parse(R);
+
+async function appliquerCode() {
+  var code = document.getElementById('promo-input').value.trim();
+  var msg = document.getElementById('promo-msg');
+  var btn = document.querySelector('.promo-apply');
+  if (!code) { msg.textContent = 'Veuillez entrer un code.'; msg.className = 'promo-msg err'; return; }
+  btn.textContent = 'Verification...'; btn.disabled = true;
+  try {
+    var res = await fetch('/code-promo', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code:code}) });
+    var d = await res.json();
+    if (d.success) {
+      msg.textContent = 'Code valide — generation de votre rapport...';
+      msg.className = 'promo-msg ok';
+      setTimeout(function(){ window.location.href = '/premium-result'; }, 1000);
+    } else {
+      msg.textContent = d.message || 'Code invalide.';
+      msg.className = 'promo-msg err';
+      btn.textContent = 'Appliquer'; btn.disabled = false;
+    }
+  } catch(e) {
+    msg.textContent = 'Erreur reseau — reessayez.';
+    msg.className = 'promo-msg err';
+    btn.textContent = 'Appliquer'; btn.disabled = false;
+  }
 }
-function sendSuggestion(b){document.getElementById('chat-input').value=b.textContent;sendMessage();}
-async function sendMessage(){
-  var input=document.getElementById('chat-input');
-  var question=input.value.trim();if(!question)return;
-  input.value='';var btn=document.getElementById('send-btn');btn.disabled=true;
-  var msgs=document.getElementById('chat-messages');
-  var um=document.createElement('div');um.className='msg user';um.textContent=question;msgs.appendChild(um);
-  var lm=document.createElement('div');lm.className='msg loading';lm.id='loading';lm.textContent='Analyse en cours...';msgs.appendChild(lm);
-  msgs.scrollTop=msgs.scrollHeight;
-  try{
-    var res=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:question,rapport:rapportData,premium:isPremium,questions_used:questionsUsed})});
-    var data=await res.json();
-    document.getElementById('loading').remove();
-    var am=document.createElement('div');am.className='msg ai';am.innerHTML=marked.parse(data.reponse);msgs.appendChild(am);
-    msgs.scrollTop=msgs.scrollHeight;
-    if(!isPremium){questionsUsed++;var c=document.getElementById('counter');var r=2-questionsUsed;if(r<=0){if(c){c.textContent='Limite atteinte';c.style.color='#f87171';}input.disabled=true;btn.disabled=true;}else{if(c)c.textContent=r+' question gratuite restante';btn.disabled=false;}}
-    else{btn.disabled=false;}
-  }catch(e){if(document.getElementById('loading'))document.getElementById('loading').remove();btn.disabled=false;}
+
+function useSugg(b) { document.getElementById('chat-input').value = b.textContent; send(); }
+
+async function send() {
+  var input = document.getElementById('chat-input');
+  var q = input.value.trim(); if (!q) return;
+  input.value = '';
+  var btn = document.getElementById('send-btn'); btn.disabled = true;
+  var msgs = document.getElementById('msgs');
+  var um = document.createElement('div'); um.className = 'msg user'; um.textContent = q; msgs.appendChild(um);
+  var lm = document.createElement('div'); lm.className = 'msg loading'; lm.id = 'lm'; lm.textContent = 'Analyse en cours...'; msgs.appendChild(lm);
+  msgs.scrollTop = msgs.scrollHeight;
+  try {
+    var res = await fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question:q, rapport:R, premium:P, questions_used:Q}) });
+    var d = await res.json();
+    var el = document.getElementById('lm'); if(el) el.remove();
+    var am = document.createElement('div'); am.className = 'msg ai'; am.innerHTML = marked.parse(d.reponse); msgs.appendChild(am);
+    msgs.scrollTop = msgs.scrollHeight;
+    if (!P) {
+      Q++;
+      var c = document.getElementById('counter');
+      var r = 2 - Q;
+      if (r <= 0) { if(c){c.textContent='Limite atteinte — passez en premium pour continuer';c.style.color='#F87171';} input.disabled=true; btn.disabled=true; }
+      else { if(c) c.textContent = r + ' question gratuite restante'; btn.disabled=false; }
+    } else { btn.disabled=false; }
+  } catch(e) { var el=document.getElementById('lm'); if(el)el.remove(); btn.disabled=false; }
 }
-function exportPDF(){
-  var f=window.open('','_blank');
-  f.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rapport NicheAI</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.7;color:#333;}h1,h2,h3{color:#1a1a2e;}@media print{body{margin:0;}}</style></head><body><h1>Rapport NicheAI Premium</h1>'+document.getElementById('rapport-content').innerHTML+'</body></html>');
-  f.document.close();setTimeout(function(){f.print();},500);
+
+function exportPDF() {
+  var w = window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rapport NicheAI</title><style>body{font-family:Georgia,serif;max-width:760px;margin:48px auto;padding:0 24px;color:#1a1a1a;line-height:1.75;}h1{font-size:24px;margin-bottom:32px;}h2,h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:#6D28D9;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid #e5e7eb;}p{margin-bottom:12px;}ul,ol{margin:8px 0 12px 20px;}li{margin-bottom:4px;}@media print{body{margin:0;}}</style></head><body><h1>Rapport NicheAI Premium</h1>' + document.getElementById('rapport-content').innerHTML + '</body></html>');
+  w.document.close();
+  setTimeout(function(){ w.print(); }, 600);
 }
 </script>
 </body>
