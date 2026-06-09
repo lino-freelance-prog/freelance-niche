@@ -4,6 +4,7 @@ import stripe
 import os
 import re
 from dotenv import load_dotenv
+import markdown as md_lib
 
 load_dotenv()
 
@@ -105,7 +106,8 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
 
-    return render_template("resultat.html", rapport=rapport_gratuit, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
+    rapport_html = md_lib.markdown(rapport_gratuit)
+    return render_template("resultat.html", rapport=rapport_gratuit, rapport_html=rapport_html, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
 
 @app.route("/code-promo", methods=["POST"])
@@ -135,7 +137,8 @@ def premium_result():
         )
         session["rapport_complet"] = rapport
         session.modified = True
-    return render_template("resultat.html", rapport=rapport, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
+    rapport_html = md_lib.markdown(rapport)
+    return render_template("resultat.html", rapport=rapport, rapport_html=rapport_html, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
 
 @app.route("/mentions-legales")

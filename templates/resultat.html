@@ -513,7 +513,7 @@ body {
 
   <div class="report-card">
     <div class="report-card-inner">
-      <div class="md" id="rapport-content"></div>
+      <div class="md" id="rapport-content">{{ rapport_html | safe }}</div>
     </div>
     <div class="blur-footer">
       <div class="blur-lines">
@@ -580,7 +580,7 @@ body {
         <button class="btn-solid" onclick="exportPDF()">&#8595; Exporter PDF</button>
       </div>
       <div class="divider"></div>
-      <div class="md" id="rapport-content"></div>
+      <div class="md" id="rapport-content">{{ rapport_html | safe }}</div>
     </div>
   </div>
 
@@ -615,7 +615,6 @@ var R = JSON.parse(document.getElementById('rapport-json').textContent);
 var P = {{ 'true' if premium else 'false' }};
 var Q = 0;
 
-document.getElementById('rapport-content').innerHTML = marked.parse(R);
 
 async function appliquerCode() {
   var code = document.getElementById('promo-input').value.trim();
