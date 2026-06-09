@@ -4,7 +4,6 @@ import stripe
 import os
 import re
 from dotenv import load_dotenv
-import markdown as md_lib
 
 load_dotenv()
 
@@ -44,6 +43,25 @@ En francais, concret."""
         return r.content[0].text
     except Exception as e:
         return f"Erreur generation: {str(e)}"
+
+
+def md_to_html(text):
+    import re
+    lines = text.split("\n")
+    html = []
+    for line in lines:
+        line = re.sub(r"^### (.+)$", r"<h3>\1</h3>", line)
+        line = re.sub(r"^## (.+)$", r"<h2>\1</h2>", line)
+        line = re.sub(r"^# (.+)$", r"<h1>\1</h1>", line)
+        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
+        line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
+        if line.strip() == "":
+            html.append("<br>")
+        elif line.startswith("<h"):
+            html.append(line)
+        else:
+            html.append("<p>" + line + "</p>")
+    return "\n".join(html)
 
 @app.route("/")
 def index():
@@ -106,7 +124,7 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
 
-    rapport_html = md_lib.markdown(rapport_gratuit)
+    rapport_html = md_to_html(rapport_gratuit)
     return render_template("resultat.html", rapport=rapport_gratuit, rapport_html=rapport_html, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
 
@@ -137,7 +155,7 @@ def premium_result():
         )
         session["rapport_complet"] = rapport
         session.modified = True
-    rapport_html = md_lib.markdown(rapport)
+    rapport_html = md_to_html(rapport)
     return render_template("resultat.html", rapport=rapport, rapport_html=rapport_html, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
 
