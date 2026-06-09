@@ -30,7 +30,6 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 def envoyer_email(destinataire, rapport):
     print(f"Email a envoyer a {destinataire}")
 
-
 def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif):
     import anthropic as ac
     cl = ac.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
@@ -43,7 +42,6 @@ En francais, concret."""
         return r.content[0].text
     except Exception as e:
         return f"Erreur generation: {str(e)}"
-
 
 def md_to_html(text):
     import re
@@ -84,6 +82,65 @@ def md_to_html(text):
                 html.append("<p>" + line + "</p>")
     if in_list: html.append("</ul>")
     return "\n".join(html)
+
+def md_to_html(text):
+    import re
+    lines = text.split("\n")
+    html = []
+    in_list = False
+    section_count = 0
+    in_pitch = False
+
+    for i, line in enumerate(lines):
+        line = line.rstrip()
+
+        if re.match(r"^#{1,3} ", line):
+            if in_list: html.append("</ul>"); in_list = False
+            title = re.sub(r"^#{1,3} ", "", line).strip()
+            section_count += 1
+            num = str(section_count).zfill(2)
+            in_pitch = "PITCH" in title.upper() or "LINKEDIN" in title.upper()
+            if in_pitch:
+                html.append(f'''<div class="section-block pitch-block">
+<div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span><button class="copy-btn" onclick="copyPitch(this)">Copier</button></div>''')
+            else:
+                html.append(f'''<div class="section-block">
+<div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span></div>''')
+
+        elif re.match(r"^[-*] |^- ", line):
+            if not in_list:
+                html.append("<ul>")
+                in_list = True
+            item = re.sub(r"^[-*] ", "", line)
+            item = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", item)
+            item = re.sub(r"(\d+[\s]?(?:EUR|€|%|k€|K€|\$/h|EUR/h|EUR/mois)[^\s,]*)", r'<span class="stat">\1</span>', item)
+            html.append(f"<li>{item}</li>")
+
+        elif line.strip() == "" or line.strip() == "---":
+            if in_list: html.append("</ul>"); in_list = False
+            if html and not html[-1].endswith("</div>") and not html[-1] == "<ul>":
+                if in_pitch:
+                    html.append("</div>")
+                    in_pitch = False
+                elif html[-1] not in ["</ul>", ""]:
+                    pass
+
+        else:
+            if in_list: html.append("</ul>"); in_list = False
+            if line.strip():
+                line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
+                line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
+                line = re.sub(r"(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)", r'<span class="stat">\1</span>', line)
+                if in_pitch:
+                    html.append(f'<p class="pitch-text">{line}</p>')
+                else:
+                    html.append(f"<p>{line}</p>")
+
+    if in_list: html.append("</ul>")
+    result = "\n".join(html)
+    # Fermer les section-blocks
+    result = re.sub(r'(<div class="section-block[^>]*>[\s\S]*?)(?=<div class="section-block|$)', r'\1</div>\n', result)
+    return result
 
 @app.route("/")
 def index():
@@ -149,7 +206,6 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
     rapport_html = md_to_html(rapport_gratuit)
     return render_template("resultat.html", rapport=rapport_gratuit, rapport_html=rapport_html, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
-
 @app.route("/code-promo", methods=["POST"])
 def code_promo():
     data = request.get_json()
@@ -159,7 +215,6 @@ def code_promo():
     session["premium_unlocked"] = True
     session.modified = True
     return jsonify({"success": True})
-
 
 @app.route("/premium-result")
 def premium_result():
@@ -179,7 +234,6 @@ def premium_result():
         session.modified = True
     rapport_html = md_to_html(rapport)
     return render_template("resultat.html", rapport=rapport, rapport_html=rapport_html, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
-
 
 @app.route("/mentions-legales")
 def mentions_legales():
