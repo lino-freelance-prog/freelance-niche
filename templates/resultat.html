@@ -3,663 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Votre rapport — NicheAI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js">
-</script>
+<title>Votre rapport - NicheAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #08080F;
-  --surface: #0F0F1A;
-  --surface2: #14141F;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(139,92,246,0.4);
-  --violet: #8B5CF6;
-  --violet-light: #A78BFA;
-  --violet-dim: rgba(139,92,246,0.12);
-  --text: #E2E8F0;
-  --text-muted: #64748B;
-  --text-dim: #94A3B8;
-  --green: #4ADE80;
-  --red: #F87171;
-  --radius: 14px;
-  --radius-sm: 8px;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ── NAV ── */
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  height: 64px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: rgba(8,8,15,0.85);
-  backdrop-filter: blur(12px);
-  z-index: 100;
-}
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 18px;
-  color: #fff;
-  letter-spacing: -0.3px;
-}
-.logo span { color: var(--violet); }
-.nav-right { display: flex; align-items: center; gap: 16px; }
-.nav-link {
-  font-size: 13px;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color .2s;
-}
-.nav-link:hover { color: var(--text); }
-
-/* ── LAYOUT ── */
-.page { max-width: 800px; margin: 0 auto; padding: 52px 24px 80px; }
-
-/* ── HEADER SECTION ── */
-.report-header { margin-bottom: 40px; }
-.report-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-}
-.chip-free {
-  background: rgba(100,116,139,0.15);
-  border: 1px solid rgba(100,116,139,0.25);
-  color: #94A3B8;
-}
-.chip-premium {
-  background: rgba(139,92,246,0.15);
-  border: 1px solid rgba(139,92,246,0.35);
-  color: var(--violet-light);
-}
-.chip-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.8;
-}
-.report-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-.report-sub {
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
-/* ── REPORT CARD ── */
-.report-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-.report-card-inner { padding: 36px; }
-
-/* ── MARKDOWN ── */
-.md h1, .md h2, .md h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--violet-light);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin: 28px 0 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-.md h1:first-child, .md h2:first-child, .md h3:first-child { margin-top: 0; }
-.md p { font-size: 15px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.75; }
-.md ul, .md ol { margin: 8px 0 12px 20px; }
-.md li { font-size: 15px; color: var(--text-dim); margin-bottom: 6px; line-height: 1.7; }
-.md strong { color: var(--text); font-weight: 600; }
-.md hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-.md code { background: var(--violet-dim); color: var(--violet-light); padding: 2px 7px; border-radius: 4px; font-size: 13px; }
-
-/* ── BLUR FOOTER (free) ── */
-.blur-footer {
-  padding: 32px 36px;
-  background: linear-gradient(to bottom, transparent, var(--surface) 60%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  border-top: 1px solid var(--border);
-}
-.blur-lines { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-bottom: 12px; }
-.blur-line {
-  height: 10px;
-  border-radius: 4px;
-  background: rgba(255,255,255,0.06);
-}
-
-/* ── UNLOCK SECTION ── */
-.unlock-section {
-  background: var(--surface);
-  border: 1px solid rgba(139,92,246,0.2);
-  border-radius: var(--radius);
-  padding: 40px 36px;
-  margin-bottom: 24px;
-  position: relative;
-  overflow: hidden;
-}
-.unlock-section::before {
-  content: '';
-  position: absolute;
-  top: -80px; right: -80px;
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-.unlock-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--violet);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
-}
-.unlock-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.3px;
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-.unlock-desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 32px;
-  max-width: 440px;
-}
-
-/* ── FEATURES ── */
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 36px;
-}
-.feat {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  color: var(--text-dim);
-  transition: border-color .2s;
-}
-.feat:hover { border-color: var(--border-hover); color: var(--text); }
-.feat-check {
-  width: 18px; height: 18px;
-  border-radius: 5px;
-  background: var(--violet-dim);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  font-size: 10px;
-  color: var(--violet);
-}
-
-/* ── PRICE ── */
-.price-row {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  margin-bottom: 28px;
-}
-.price-amount {
-  font-family: 'Syne', sans-serif;
-  font-size: 48px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  letter-spacing: -1px;
-}
-.price-info { padding-bottom: 4px; }
-.price-period { font-size: 13px; color: var(--text-muted); }
-.price-note { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-/* ── PROMO ── */
-.promo-block { margin-bottom: 16px; }
-.promo-row {
-  display: flex;
-  gap: 8px;
-  max-width: 380px;
-  margin-bottom: 8px;
-}
-.promo-input {
-  flex: 1;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: #fff;
-  outline: none;
-  transition: border-color .2s;
-  letter-spacing: 1px;
-}
-.promo-input::placeholder { color: var(--text-muted); letter-spacing: 0; }
-.promo-input:focus { border-color: var(--violet); }
-.promo-apply {
-  background: var(--violet);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 12px 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background .2s, transform .1s;
-  white-space: nowrap;
-}
-.promo-apply:hover { background: #7C3AED; }
-.promo-apply:active { transform: scale(0.98); }
-.promo-apply:disabled { opacity: 0.5; cursor: not-allowed; }
-.promo-msg {
-  font-size: 12px;
-  min-height: 16px;
-  padding-left: 2px;
-}
-.promo-msg.ok { color: var(--green); }
-.promo-msg.err { color: var(--red); }
-
-/* ── CTA ── */
-.cta-main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 380px;
-  padding: 15px 24px;
-  background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'Syne', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all .2s;
-  letter-spacing: 0.2px;
-  box-shadow: 0 4px 20px rgba(139,92,246,0.25);
-  margin-bottom: 10px;
-}
-.cta-main:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(139,92,246,0.35);
-}
-.cta-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-  max-width: 380px;
-}
-
-/* ── PREMIUM ACTIONS ── */
-.premium-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 28px;
-}
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  color: var(--text-muted);
-  cursor: pointer;
-  text-decoration: none;
-  transition: all .2s;
-}
-.btn-ghost:hover { border-color: var(--border-hover); color: var(--violet-light); }
-.btn-solid {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: var(--violet-dim);
-  border: 1px solid rgba(139,92,246,0.25);
-  border-radius: var(--radius-sm);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--violet-light);
-  cursor: pointer;
-  transition: all .2s;
-}
-.btn-solid:hover { background: rgba(139,92,246,0.2); }
-
-/* ── DIVIDER ── */
-.divider { height: 1px; background: var(--border); margin: 28px 0; }
-
-/* ── CHAT ── */
-.chat-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.chat-header { padding: 24px 28px 0; }
-.chat-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.chat-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
-.suggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 0 28px 20px;
-  border-bottom: 1px solid var(--border);
-}
-.sugg {
-  padding: 6px 14px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  color: var(--text-dim);
-  cursor: pointer;
-  transition: all .2s;
-}
-.sugg:hover { border-color: var(--border-hover); color: var(--violet-light); }
-.messages {
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 20px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.messages:empty { display: none; }
-.msg { font-size: 14px; line-height: 1.7; }
-.msg.user {
-  align-self: flex-end;
-  max-width: 80%;
-  background: var(--violet-dim);
-  border: 1px solid rgba(139,92,246,0.2);
-  border-radius: var(--radius-sm);
-  padding: 10px 16px;
-  color: var(--text);
-}
-.msg.ai {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  color: var(--text-dim);
-}
-.msg.loading { color: var(--text-muted); font-style: italic; padding: 0 0 4px; }
-.chat-footer { padding: 16px 28px 24px; }
-.chat-input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-.chat-input {
-  flex: 1;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 11px 16px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  color: #fff;
-  outline: none;
-  transition: border-color .2s;
-}
-.chat-input:focus { border-color: var(--violet); }
-.chat-input::placeholder { color: var(--text-muted); }
-.chat-send {
-  background: var(--violet);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 11px 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background .2s;
-}
-.chat-send:hover { background: #7C3AED; }
-.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
-.chat-counter { font-size: 12px; color: var(--text-muted); }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-
-@media (max-width: 640px) {
-  .nav { padding: 0 20px; }
-  .page { padding: 32px 16px 60px; }
-  .report-card-inner, .unlock-section, .chat-header, .chat-footer { padding: 24px 20px; }
-  .suggestions { padding: 0 20px 16px; }
-  .messages { padding: 16px 20px; }
-  .features { grid-template-columns: 1fr; }
-  .price-amount { font-size: 40px; }
-  .report-title { font-size: 22px; }
-}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#08080F;--s1:#0F0F1A;--s2:#14141F;--br:rgba(255,255,255,0.07);--v:#8B5CF6;--vl:#A78BFA;--vd:rgba(139,92,246,0.12);--tx:#E2E8F0;--tm:#64748B;--td:#94A3B8;--gr:#4ADE80;--re:#F87171;--r:14px;--rs:8px;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:0 40px;height:64px;border-bottom:1px solid var(--br);background:rgba(8,8,15,0.9);backdrop-filter:blur(12px);}
+.logo{font-family:'Syne',sans-serif;font-weight:900;font-size:18px;color:#fff;}.logo span{color:var(--v);}
+.nav-link{font-size:13px;color:var(--tm);text-decoration:none;}.nav-link:hover{color:var(--tx);}
+.page{max-width:800px;margin:0 auto;padding:48px 24px 80px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:20px;}
+.chip-f{background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.25);color:#94A3B8;}
+.chip-p{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.35);color:var(--vl);}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.card{background:var(--s1);border:1px solid var(--br);border-radius:var(--r);padding:36px;margin-bottom:24px;}
+.card-label{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.card-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:24px;letter-spacing:-.3px;}
+.divider{height:1px;background:var(--br);margin:0 0 24px;}
+.md h1,.md h2,.md h3{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--vl);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--br);}
+.md h1:first-child,.md h2:first-child{margin-top:0;}
+.md p{font-size:15px;color:var(--td);margin-bottom:12px;line-height:1.8;}
+.md ul,.md ol{margin:8px 0 14px 20px;}.md li{font-size:15px;color:var(--td);margin-bottom:6px;line-height:1.7;}
+.md strong{color:var(--tx);font-weight:600;}
+.unlock{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(109,40,217,.05));border:1px solid rgba(139,92,246,.2);border-radius:var(--r);padding:40px 36px;margin-bottom:24px;}
+.unlock-lbl{font-size:11px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.unlock-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.3px;}
+.unlock-desc{font-size:14px;color:var(--tm);margin-bottom:32px;max-width:440px;}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:36px;}
+.feat{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);font-size:13px;color:var(--td);}
+.feat-ck{width:18px;height:18px;border-radius:5px;background:var(--vd);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:var(--v);}
+.price-row{display:flex;align-items:flex-end;gap:12px;margin-bottom:28px;}
+.price{font-family:'Syne',sans-serif;font-size:48px;font-weight:900;color:#fff;line-height:1;letter-spacing:-1px;}
+.price-info{padding-bottom:4px;}.price-period{font-size:13px;color:var(--tm);}.price-note{font-size:12px;color:var(--tm);margin-top:2px;}
+.promo-block{margin-bottom:16px;}
+.promo-row{display:flex;gap:8px;max-width:380px;margin-bottom:8px;}
+.promo-input{flex:1;background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);padding:12px 16px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;transition:border-color .2s;}
+.promo-input:focus{border-color:var(--v);}
+.promo-apply{background:var(--v);color:#fff;border:none;border-radius:var(--rs);padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.promo-apply:hover{background:#7C3AED;}.promo-apply:disabled{opacity:.5;}
+.promo-msg{font-size:12px;min-height:16px;}.promo-msg.ok{color:var(--gr);}.promo-msg.err{color:var(--re);}
+.cta{display:flex;align-items:center;justify-content:center;width:100%;max-width:380px;padding:15px 24px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;border-radius:var(--rs);font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;text-align:center;transition:all .2s;box-shadow:0 4px 20px rgba(139,92,246,.25);margin-bottom:10px;}
+.cta:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(139,92,246,.35);}
+.cta-hint{font-size:12px;color:var(--tm);max-width:380px;}
+.pa{display:flex;gap:8px;margin-bottom:28px;}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid var(--br);border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:13px;color:var(--tm);cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-ghost:hover{border-color:rgba(139,92,246,.4);color:var(--vl);}
+.btn-solid{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--vd);border:1px solid rgba(139,92,246,.25);border-radius:var(--rs);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--vl);cursor:pointer;transition:all .2s;}
+.chat-card{background:var(--s1);border:1px solid var(--br);border-radius:var(--r);overflow:hidden;}
+.chat-hd{padding:24px 28px 0;}
+.chat-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;}
+.chat-sub{font-size:13px;color:var(--tm);margin-bottom:16px;}
+.suggs{display:flex;flex-wrap:wrap;gap:6px;padding:0 28px 20px;border-bottom:1px solid var(--br);}
+.sugg{padding:6px 14px;background:var(--s2);border:1px solid var(--br);border-radius:20px;font-family:'Inter',sans-serif;font-size:12px;color:var(--td);cursor:pointer;transition:all .2s;}
+.sugg:hover{border-color:rgba(139,92,246,.4);color:var(--vl);}
+.msgs{max-height:300px;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:10px;}
+.msg{font-size:14px;line-height:1.7;}
+.msg.user{align-self:flex-end;max-width:80%;background:var(--vd);border:1px solid rgba(139,92,246,.2);border-radius:var(--rs);padding:10px 16px;color:var(--tx);}
+.msg.ai{background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);padding:12px 16px;color:var(--td);}
+.msg.ld{color:var(--tm);font-style:italic;}
+.chat-ft{padding:16px 28px 24px;}
+.chat-ir{display:flex;gap:8px;margin-bottom:8px;}
+.chat-in{flex:1;background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);padding:11px 16px;font-family:'Inter',sans-serif;font-size:14px;color:#fff;outline:none;}
+.chat-in:focus{border-color:var(--v);}
+.send-btn{background:var(--v);color:#fff;border:none;border-radius:var(--rs);padding:11px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.send-btn:disabled{opacity:.4;}
+.ctr{font-size:12px;color:var(--tm);}
+footer{text-align:center;padding:32px 24px;border-top:1px solid var(--br);margin-top:40px;}
+footer a{font-size:13px;color:var(--tm);text-decoration:none;margin:0 12px;}
+footer p{font-size:12px;color:#334155;margin-top:10px;}
+@media(max-width:640px){.nav{padding:0 20px;}.page{padding:32px 16px 60px;}.feats{grid-template-columns:1fr;}.price{font-size:38px;}.card{padding:24px 20px;}.unlock{padding:28px 20px;}}
 </style>
 </head>
 <body>
-
 <nav class="nav">
   <div class="logo">Niche<span>AI</span></div>
-  <div class="nav-right">
-    <a href="/" class="nav-link">&#8592; Nouveau rapport</a>
-  </div>
+  <a href="/" class="nav-link">&#8592; Nouveau rapport</a>
 </nav>
-
-<main class="page">
-
+<div class="page">
 {% if not premium %}
-
-  <div class="report-header">
-    <div class="report-meta">
-      <div class="chip chip-free"><div class="chip-dot"></div>Apercu gratuit</div>
-    </div>
-    <h1 class="report-title">Apercu de votre positionnement</h1>
-    <p class="report-sub">Analyse partielle &mdash; les sections cles sont deverrouillees ci-dessous</p>
+<div class="chip chip-f"><div class="chip-dot"></div>Apercu gratuit</div>
+<div class="card">
+  <div class="card-label">Analyse de positionnement</div>
+  <div class="card-title">Apercu de votre positionnement</div>
+  <div class="divider"></div>
+  <div class="md">{{ rapport_html | safe }}</div>
+</div>
+<div class="unlock">
+  <div class="unlock-lbl">Rapport complet</div>
+  <div class="unlock-title">Debloquez votre analyse strategique integrale</div>
+  <p class="unlock-desc">Donnees de marche reelles, plan d action semaine par semaine, templates prets a l emploi.</p>
+  <div class="feats">
+    <div class="feat"><div class="feat-ck">&#10003;</div>Donnees marche en temps reel</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Score de potentiel detaille</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Top 3 plateformes + strategie</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>5 mots-cles SEO cibles</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Plan d action 30 jours</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Template de prospection</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Script d appel client</div>
+    <div class="feat"><div class="feat-ck">&#10003;</div>Chat IA illimite + Export PDF</div>
   </div>
-
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="md" id="rapport-content">{{ rapport_html | safe }}</div>
-    </div>
-    <div class="blur-footer">
-      <div class="blur-lines">
-        <div class="blur-line" style="width:90%"></div>
-        <div class="blur-line" style="width:70%"></div>
-        <div class="blur-line" style="width:80%"></div>
-        <div class="blur-line" style="width:55%"></div>
-      </div>
-    </div>
+  <div class="price-row">
+    <div class="price">19,90&#8364;</div>
+    <div class="price-info"><div class="price-period">paiement unique</div><div class="price-note">acces a vie</div></div>
   </div>
-
-  <div class="unlock-section">
-    <div class="unlock-label">Rapport complet</div>
-    <h2 class="unlock-title">Debloquez votre analyse strategique integrale</h2>
-    <p class="unlock-desc">Donnees de marche reelles, plan d'action semaine par semaine, templates prets a l'emploi &mdash; tout ce qu'il faut pour trouver vos premiers clients.</p>
-
-    <div class="features">
-      <div class="feat"><div class="feat-check">✓</div>Donnees marche en temps reel</div>
-      <div class="feat"><div class="feat-check">✓</div>Score de potentiel detaille</div>
-      <div class="feat"><div class="feat-check">✓</div>Top 3 plateformes + strategie</div>
-      <div class="feat"><div class="feat-check">✓</div>5 mots-cles SEO cibles</div>
-      <div class="feat"><div class="feat-check">✓</div>Plan d'action 30 jours</div>
-      <div class="feat"><div class="feat-check">✓</div>Template de prospection</div>
-      <div class="feat"><div class="feat-check">✓</div>Script d'appel client</div>
-      <div class="feat"><div class="feat-check">✓</div>Chat IA illimite + Export PDF</div>
+  <div class="promo-block">
+    <div class="promo-row">
+      <input id="promo-input" class="promo-input" type="text" placeholder="Code promo" autocomplete="off">
+      <button class="promo-apply" onclick="appliquerCode()">Appliquer</button>
     </div>
-
-    <div class="price-row">
-      <div class="price-amount">19,90&#8364;</div>
-      <div class="price-info">
-        <div class="price-period">paiement unique</div>
-        <div class="price-note">acces a vie</div>
-      </div>
-    </div>
-
-    <div class="promo-block">
-      <div class="promo-row">
-        <input id="promo-input" class="promo-input" type="text" placeholder="Code promo" autocomplete="off" spellcheck="false">
-        <button class="promo-apply" onclick="appliquerCode()">Appliquer</button>
-      </div>
-      <div id="promo-msg" class="promo-msg"></div>
-    </div>
-
-    <a href="/paiement" class="cta-main">Deverrouiller le rapport complet</a>
-    <p class="cta-hint">Paiement securise &middot; Acces immediat &middot; Satisfait ou rembourse</p>
+    <div id="promo-msg" class="promo-msg"></div>
   </div>
-
+  <a href="/paiement" class="cta">Deverrouiller le rapport complet</a>
+  <p class="cta-hint">Paiement securise &middot; Acces immediat &middot; Satisfait ou rembourse</p>
+</div>
 {% endif %}
-
 {% if premium %}
-
-  <div class="report-header">
-    <div class="report-meta">
-      <div class="chip chip-premium"><div class="chip-dot"></div>Premium</div>
-    </div>
-    <h1 class="report-title">Rapport strategique complet</h1>
-    <p class="report-sub">Analyse complete &mdash; toutes les sections sont disponibles</p>
+<div class="chip chip-p"><div class="chip-dot"></div>Premium</div>
+<div class="card">
+  <div class="card-label">Analyse de positionnement</div>
+  <div class="card-title">Rapport strategique complet</div>
+  <div class="pa">
+    <a href="/" class="btn-ghost">&#8592; Nouveau rapport</a>
+    <button class="btn-solid" onclick="exportPDF()">&#8595; Exporter PDF</button>
   </div>
-
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="premium-actions">
-        <a href="/" class="btn-ghost">&#8592; Nouveau rapport</a>
-        <button class="btn-solid" onclick="exportPDF()">&#8595; Exporter PDF</button>
-      </div>
-      <div class="divider"></div>
-      <div class="md" id="rapport-content">{{ rapport_html | safe }}</div>
-    </div>
-  </div>
-
+  <div class="divider"></div>
+  <div class="md" id="rapport-display">{{ rapport_html | safe }}</div>
+</div>
 {% endif %}
-
-  <div class="chat-section">
-    <div class="chat-header">
-      <div class="chat-title">Assistant IA</div>
-      <div class="chat-sub">Posez vos questions &mdash; l'IA repond en fonction de votre profil</div>
-    </div>
-    <div class="suggestions">
-      <button class="sugg" onclick="useSugg(this)">Comment trouver mes premiers clients ?</button>
-      <button class="sugg" onclick="useSugg(this)">Redige mon profil Malt</button>
-      <button class="sugg" onclick="useSugg(this)">Template de case study</button>
-      <button class="sugg" onclick="useSugg(this)">Comment negocier mon TJM ?</button>
-    </div>
-    <div class="messages" id="msgs"></div>
-    <div class="chat-footer">
-      <div class="chat-input-row">
-        <input id="chat-input" class="chat-input" type="text" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter')send()">
-        <button id="send-btn" class="chat-send" onclick="send()">Envoyer</button>
-      </div>
-      {% if not premium %}<div class="chat-counter" id="counter">2 questions gratuites incluses</div>{% endif %}
-    </div>
+<div class="chat-card">
+  <div class="chat-hd">
+    <div class="chat-title">Assistant IA</div>
+    <div class="chat-sub">Posez vos questions en fonction de votre profil</div>
   </div>
-
-</main>
-
-<script>
-var R = document.getElementById("rapport-data").textContent;
-var P = {{ 'true' if premium else 'false' }};
-var Q = 0;
-
-
-function useSugg(b) { document.getElementById('chat-input').value = b.textContent; send(); }
-
-async function send() {
-  var input = document.getElementById('chat-input');
-  var q = input.value.trim(); if (!q) return;
-  input.value = '';
-  var btn = document.getElementById('send-btn'); btn.disabled = true;
-  var msgs = document.getElementById('msgs');
-  var um = document.createElement('div'); um.className = 'msg user'; um.textContent = q; msgs.appendChild(um);
-  var lm = document.createElement('div'); lm.className = 'msg loading'; lm.id = 'lm'; lm.textContent = 'Analyse en cours...'; msgs.appendChild(lm);
-  msgs.scrollTop = msgs.scrollHeight;
-  try {
-    var res = await fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question:q, rapport:R, premium:P, questions_used:Q}) });
-    var d = await res.json();
-    var el = document.getElementById('lm'); if(el) el.remove();
-    var am = document.createElement('div'); am.className = 'msg ai'; am.innerHTML = marked.parse(d.reponse); msgs.appendChild(am);
-    msgs.scrollTop = msgs.scrollHeight;
-    if (!P) {
-      Q++;
-      var c = document.getElementById('counter');
-      var r = 2 - Q;
-      if (r <= 0) { if(c){c.textContent='Limite atteinte — passez en premium pour continuer';c.style.color='#F87171';} input.disabled=true; btn.disabled=true; }
-      else { if(c) c.textContent = r + ' question gratuite restante'; btn.disabled=false; }
-    } else { btn.disabled=false; }
-  } catch(e) { var el=document.getElementById('lm'); if(el)el.remove(); btn.disabled=false; }
-}
-
-function exportPDF() {
-  var w = window.open('','_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rapport NicheAI</title><style>body{font-family:Georgia,serif;max-width:760px;margin:48px auto;padding:0 24px;color:#1a1a1a;line-height:1.75;}h1{font-size:24px;margin-bottom:32px;}h2,h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:#6D28D9;margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid #e5e7eb;}p{margin-bottom:12px;}ul,ol{margin:8px 0 12px 20px;}li{margin-bottom:4px;}@media print{body{margin:0;}}</style></head><body><h1>Rapport NicheAI Premium</h1>' + document.getElementById('rapport-content').innerHTML + '
-<footer style="text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,0.07);margin-top:60px;">
-  <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">
-    <a href="/mentions-legales" style="font-size:13px;color:#64748B;text-decoration:none;">Mentions légales</a>
-    <a href="/cgv" style="font-size:13px;color:#64748B;text-decoration:none;">CGV</a>
-    <a href="/confidentialite" style="font-size:13px;color:#64748B;text-decoration:none;">Confidentialité</a>
-    <a href="mailto:contact@nicheai.fr" style="font-size:13px;color:#64748B;text-decoration:none;">Contact</a>
+  <div class="suggs">
+    <button class="sugg" onclick="useSugg(this)">Comment trouver mes premiers clients ?</button>
+    <button class="sugg" onclick="useSugg(this)">Redige mon profil Malt</button>
+    <button class="sugg" onclick="useSugg(this)">Template de case study</button>
+    <button class="sugg" onclick="useSugg(this)">Comment negocier mon TJM ?</button>
   </div>
-  <p style="font-size:12px;color:#334155;margin-top:12px;">© 2026 NicheAI</p>
+  <div class="msgs" id="msgs"></div>
+  <div class="chat-ft">
+    <div class="chat-ir">
+      <input id="chat-in" class="chat-in" type="text" placeholder="Posez votre question..." onkeypress="if(event.key==='Enter')send()">
+      <button id="send-btn" class="send-btn" onclick="send()">Envoyer</button>
+    </div>
+    {% if not premium %}<div class="ctr" id="ctr">2 questions gratuites incluses</div>{% endif %}
+  </div>
+</div>
+<footer>
+  <div><a href="/mentions-legales">Mentions legales</a><a href="/cgv">CGV</a><a href="/confidentialite">Confidentialite</a><a href="mailto:contact@nicheai.fr">Contact</a></div>
+  <p>&#169; 2026 NicheAI</p>
 </footer>
-<div id="rapport-data" style="display:none">{{ rapport | e }}</div>
-</body></html>');
-  w.document.close();
-  setTimeout(function(){ w.print(); }, 600);
-}
+</div>
+<script>
+var isPremium = {{ 'true' if premium else 'false' }};
+var questionsUsed = 0;
 
 async function appliquerCode() {
     var code = document.getElementById('promo-input').value.trim();
@@ -668,7 +167,7 @@ async function appliquerCode() {
     if (!code) { msg.textContent = 'Entrez un code.'; msg.className = 'promo-msg err'; return; }
     btn.textContent = 'Verification...'; btn.disabled = true;
     try {
-        var res = await fetch('/code-promo', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code:code})});
+        var res = await fetch('/code-promo', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code: code})});
         var d = await res.json();
         if (d.success) {
             msg.textContent = 'Code valide !';
@@ -685,17 +184,39 @@ async function appliquerCode() {
         btn.textContent = 'Appliquer'; btn.disabled = false;
     }
 }
-</script>
 
-<footer style="text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,0.07);margin-top:60px;">
-  <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">
-    <a href="/mentions-legales" style="font-size:13px;color:#64748B;text-decoration:none;">Mentions légales</a>
-    <a href="/cgv" style="font-size:13px;color:#64748B;text-decoration:none;">CGV</a>
-    <a href="/confidentialite" style="font-size:13px;color:#64748B;text-decoration:none;">Confidentialité</a>
-    <a href="mailto:contact@nicheai.fr" style="font-size:13px;color:#64748B;text-decoration:none;">Contact</a>
-  </div>
-  <p style="font-size:12px;color:#334155;margin-top:12px;">© 2026 NicheAI</p>
-</footer>
-<div id="rapport-data" style="display:none">{{ rapport | e }}</div>
+function useSugg(b) { document.getElementById('chat-in').value = b.textContent; send(); }
+
+async function send() {
+    var input = document.getElementById('chat-in');
+    var q = input.value.trim(); if (!q) return;
+    input.value = '';
+    var btn = document.getElementById('send-btn'); btn.disabled = true;
+    var msgs = document.getElementById('msgs');
+    var um = document.createElement('div'); um.className = 'msg user'; um.textContent = q; msgs.appendChild(um);
+    var lm = document.createElement('div'); lm.className = 'msg ld'; lm.id = 'lm'; lm.textContent = 'Analyse...'; msgs.appendChild(lm);
+    msgs.scrollTop = msgs.scrollHeight;
+    try {
+        var res = await fetch('/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: q, premium: isPremium, questions_used: questionsUsed})});
+        var d = await res.json();
+        var el = document.getElementById('lm'); if(el) el.remove();
+        var am = document.createElement('div'); am.className = 'msg ai'; am.textContent = d.reponse; msgs.appendChild(am);
+        msgs.scrollTop = msgs.scrollHeight;
+        if (!isPremium) {
+            questionsUsed++;
+            var c = document.getElementById('ctr'); var r = 2 - questionsUsed;
+            if (r <= 0) { if(c){c.textContent='Limite atteinte';c.style.color='#F87171';} input.disabled=true; btn.disabled=true; }
+            else { if(c) c.textContent = r + ' question gratuite restante'; btn.disabled=false; }
+        } else { btn.disabled=false; }
+    } catch(e) { var el=document.getElementById('lm'); if(el)el.remove(); btn.disabled=false; }
+}
+
+function exportPDF() {
+    var w = window.open('','_blank');
+    var content = document.getElementById('rapport-display') ? document.getElementById('rapport-display').innerHTML : '';
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rapport NicheAI</title><style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1a1a1a;line-height:1.75;}h1,h2,h3{color:#6D28D9;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;}p{margin-bottom:12px;}@media print{body{margin:0;}}</style></head><body><h1>Rapport NicheAI Premium</h1>' + content + '</body></html>');
+    w.document.close(); setTimeout(function(){ w.print(); }, 500);
+}
+</script>
 </body>
 </html>
