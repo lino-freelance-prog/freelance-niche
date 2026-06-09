@@ -49,18 +49,40 @@ def md_to_html(text):
     import re
     lines = text.split("\n")
     html = []
+    in_list = False
     for line in lines:
-        line = re.sub(r"^### (.+)$", r"<h3>\1</h3>", line)
-        line = re.sub(r"^## (.+)$", r"<h2>\1</h2>", line)
-        line = re.sub(r"^# (.+)$", r"<h1>\1</h1>", line)
-        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
-        line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
-        if line.strip() == "":
-            html.append("<br>")
-        elif line.startswith("<h"):
-            html.append(line)
+        line = line.rstrip()
+        # Headers
+        if re.match(r"^### ", line):
+            if in_list: html.append("</ul>"); in_list = False
+            html.append("<h3>" + re.sub(r"^### ","",line) + "</h3>")
+        elif re.match(r"^## ", line):
+            if in_list: html.append("</ul>"); in_list = False
+            html.append("<h2>" + re.sub(r"^## ","",line) + "</h2>")
+        elif re.match(r"^# ", line):
+            if in_list: html.append("</ul>"); in_list = False
+            html.append("<h2>" + re.sub(r"^# ","",line) + "</h2>")
+        # Lists
+        elif re.match(r"^[-*] ", line) or re.match(r"^- ", line):
+            if not in_list: html.append("<ul>"); in_list = True
+            item = re.sub(r"^[-*] ","",line)
+            item = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", item)
+            html.append("<li>" + item + "</li>")
+        elif re.match(r"^\d+\. ", line):
+            if not in_list: html.append("<ul>"); in_list = True
+            item = re.sub(r"^\d+\. ","",line)
+            html.append("<li>" + item + "</li>")
+        elif line.strip() == "" or line.strip() == "---":
+            if in_list: html.append("</ul>"); in_list = False
+            if line.strip() == "---":
+                html.append("<hr>")
         else:
-            html.append("<p>" + line + "</p>")
+            if in_list: html.append("</ul>"); in_list = False
+            line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
+            line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
+            if line.strip():
+                html.append("<p>" + line + "</p>")
+    if in_list: html.append("</ul>")
     return "\n".join(html)
 
 @app.route("/")

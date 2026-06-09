@@ -21,11 +21,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .card-label{font-size:11px;color:var(--tm);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
 .card-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:24px;letter-spacing:-.3px;}
 .divider{height:1px;background:var(--br);margin:0 0 24px;}
-.md h1,.md h2,.md h3{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--vl);text-transform:uppercase;letter-spacing:1.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--br);}
-.md h1:first-child,.md h2:first-child{margin-top:0;}
-.md p{font-size:15px;color:var(--td);margin-bottom:12px;line-height:1.8;}
-.md ul,.md ol{margin:8px 0 14px 20px;}.md li{font-size:15px;color:var(--td);margin-bottom:6px;line-height:1.7;}
-.md strong{color:var(--tx);font-weight:600;}
+.md h1,.md h2,.md h3{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--v);text-transform:uppercase;letter-spacing:2px;margin:32px 0 14px;padding:10px 14px;background:rgba(139,92,246,0.06);border-left:3px solid var(--v);border-radius:0 6px 6px 0;}
+.md h1:first-child,.md h2:first-child,.md h3:first-child{margin-top:0;}
+.md p{font-size:15px;color:var(--td);margin-bottom:14px;line-height:1.85;}
+.md ul{margin:0 0 16px 0;list-style:none;padding:0;}
+.md ul li{font-size:14px;color:var(--td);margin-bottom:8px;line-height:1.7;padding:8px 12px 8px 32px;position:relative;background:rgba(255,255,255,0.02);border-radius:6px;}
+.md ul li::before{content:'';position:absolute;left:12px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--v);}
+.md strong{color:#fff;font-weight:600;}
+.md hr{border:none;border-top:1px solid var(--br);margin:24px 0;}
+.md em{color:var(--vl);font-style:normal;}
 .unlock{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(109,40,217,.05));border:1px solid rgba(139,92,246,.2);border-radius:var(--r);padding:40px 36px;margin-bottom:24px;}
 .unlock-lbl{font-size:11px;font-weight:700;color:var(--v);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
 .unlock-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.3px;}
