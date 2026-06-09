@@ -6,7 +6,33 @@
 <title>Votre rapport — NicheAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js">
+async function appliquerCode() {
+    var code = document.getElementById('promo-input').value.trim();
+    var msg = document.getElementById('promo-msg');
+    var btn = document.querySelector('.promo-apply');
+    if (!code) { msg.textContent = 'Entrez un code.'; msg.className = 'promo-msg err'; return; }
+    btn.textContent = 'Verification...'; btn.disabled = true;
+    try {
+        var res = await fetch('/code-promo', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code:code})});
+        var d = await res.json();
+        if (d.success) {
+            msg.textContent = 'Code valide — generation en cours...';
+            msg.className = 'promo-msg ok';
+            setTimeout(function(){ window.location.href = '/premium-result'; }, 1000);
+        } else {
+            msg.textContent = d.message || 'Code invalide.';
+            msg.className = 'promo-msg err';
+            btn.textContent = 'Appliquer'; btn.disabled = false;
+        }
+    } catch(e) {
+        msg.textContent = 'Erreur reseau.';
+        msg.className = 'promo-msg err';
+        btn.textContent = 'Appliquer'; btn.disabled = false;
+    }
+}
+
+</script>
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
