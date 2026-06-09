@@ -610,9 +610,8 @@ body {
 
 </main>
 
-<script type="application/json" id="rapport-json">{{ rapport | tojson }}</script>
 <script>
-var R = JSON.parse(document.getElementById('rapport-json').textContent);
+var R = document.getElementById("rapport-data").textContent;
 var P = {{ 'true' if premium else 'false' }};
 var Q = 0;
 
@@ -656,6 +655,7 @@ function exportPDF() {
   </div>
   <p style="font-size:12px;color:#334155;margin-top:12px;">© 2026 NicheAI</p>
 </footer>
+<div id="rapport-data" style="display:none">{{ rapport | e }}</div>
 </body></html>');
   w.document.close();
   setTimeout(function(){ w.print(); }, 600);
@@ -696,5 +696,6 @@ async function appliquerCode() {
   </div>
   <p style="font-size:12px;color:#334155;margin-top:12px;">© 2026 NicheAI</p>
 </footer>
+<div id="rapport-data" style="display:none">{{ rapport | e }}</div>
 </body>
 </html>
