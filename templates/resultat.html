@@ -184,9 +184,10 @@ footer p{font-size:12px;color:#334155;margin-top:10px;}
   <p>&#169; 2026 NicheAI</p>
 </footer>
 </div>
+
 <script>
 var isPremium = {{ 'true' if premium else 'false' }};
-var questionsUsed = 0;
+var Q = 0;
 
 async function appliquerCode() {
     var code = document.getElementById('promo-input').value.trim();
@@ -195,7 +196,11 @@ async function appliquerCode() {
     if (!code) { msg.textContent = 'Entrez un code.'; msg.className = 'promo-msg err'; return; }
     btn.textContent = 'Verification...'; btn.disabled = true;
     try {
-        var res = await fetch('/code-promo', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code: code})});
+        var res = await fetch('/code-promo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({code: code})
+        });
         var d = await res.json();
         if (d.success) {
             msg.textContent = 'Code valide !';
@@ -204,79 +209,93 @@ async function appliquerCode() {
         } else {
             msg.textContent = d.message || 'Code invalide.';
             msg.className = 'promo-msg err';
-            btn.textContent = 'Appliquer'; btn.disabled = false;
+            btn.textContent = 'Appliquer';
+            btn.disabled = false;
         }
     } catch(e) {
         msg.textContent = 'Erreur reseau.';
         msg.className = 'promo-msg err';
-        btn.textContent = 'Appliquer'; btn.disabled = false;
+        btn.textContent = 'Appliquer';
+        btn.disabled = false;
     }
 }
-
-function useSugg(b) { document.getElementById('chat-in').value = b.textContent; send(); }
-
-async function send() {
-    var input = document.getElementById('chat-in');
-    var q = input.value.trim(); if (!q) return;
-    input.value = '';
-    var btn = document.getElementById('send-btn'); btn.disabled = true;
-    var msgs = document.getElementById('msgs');
-    var um = document.createElement('div'); um.className = 'msg user'; um.textContent = q; msgs.appendChild(um);
-    var lm = document.createElement('div'); lm.className = 'msg ld'; lm.id = 'lm'; lm.textContent = 'Analyse...'; msgs.appendChild(lm);
-    msgs.scrollTop = msgs.scrollHeight;
-    try {
-        var res = await fetch('/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question: q, premium: isPremium, questions_used: questionsUsed})});
-        var d = await res.json();
-        var el = document.getElementById('lm'); if(el) el.remove();
-        var am = document.createElement('div'); am.className = 'msg ai'; am.textContent = d.reponse; msgs.appendChild(am);
-        msgs.scrollTop = msgs.scrollHeight;
-        if (!isPremium) {
-            questionsUsed++;
-            var c = document.getElementById('ctr'); var r = 2 - questionsUsed;
-            if (r <= 0) { if(c){c.textContent='Limite atteinte';c.style.color='#F87171';} input.disabled=true; btn.disabled=true; }
-            else { if(c) c.textContent = r + ' question gratuite restante'; btn.disabled=false; }
-        } else { btn.disabled=false; }
-    } catch(e) { var el=document.getElementById('lm'); if(el)el.remove(); btn.disabled=false; }
-}
-
 
 function copyPitch(btn) {
     var block = btn.closest('.pitch-block');
-    var text = block.querySelector('.pitch-text') ? block.querySelector('.pitch-text').innerText : '';
-    if (!text) {
-        var paras = block.querySelectorAll('p');
-        text = Array.from(paras).map(p => p.innerText).join('\n');
-    }
+    var paras = block.querySelectorAll('p');
+    var text = Array.from(paras).map(function(p){ return p.innerText; }).join('\n');
     navigator.clipboard.writeText(text).then(function(){
         btn.textContent = 'Copie !';
-        btn.style.background = 'var(--gr)';
-        btn.style.color = '#000';
-        setTimeout(function(){ btn.textContent = 'Copier'; btn.style.background = ''; btn.style.color = ''; }, 2000);
+        setTimeout(function(){ btn.textContent = 'Copier'; }, 2000);
     });
 }
 
-function exportPDF() {
-    var w = window.open('','_blank');
-    var content = document.getElementById('rapport-display') ? document.getElementById('rapport-display').innerHTML : '';
-    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rapport NicheAI</title><style>body{font-family:Georgia,serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1a1a1a;line-height:1.75;}h1,h2,h3{color:#6D28D9;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;}p{margin-bottom:12px;}@media print{body{margin:0;}}
-.report-dashboard{background:linear-gradient(135deg,rgba(20,20,35,0.9),rgba(15,15,26,0.95));border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin-bottom:24px;backdrop-filter:blur(10px);}
-.dash-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.07);}
-.dash-dots{display:flex;gap:6px;}.dash-dots span{width:12px;height:12px;border-radius:50%;display:block;}
-.dash-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:#94A3B8;}
-.dash-scores{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-.dash-score-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:16px;}
-.dash-score-label{font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
-.dash-score-value{font-family:'Syne',sans-serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
-.dash-score-sub{font-size:12px;color:#64748B;}
-.dash-bars{display:flex;flex-direction:column;gap:12px;}
-.dash-bar-row{display:flex;align-items:center;gap:12px;font-size:13px;color:#94A3B8;}
-.dash-bar-row>span:first-child{width:160px;flex-shrink:0;}
-.dash-bar{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
-.dash-bar-fill{height:100%;border-radius:3px;transition:width .8s ease;}
-.dash-bar-row>span:last-child{width:90px;text-align:right;font-size:12px;flex-shrink:0;}
+function useSugg(b) {
+    document.getElementById('chat-in').value = b.textContent;
+    send();
+}
 
-</style></head><body><h1>Rapport NicheAI Premium</h1>' + content + '</body></html>');
-    w.document.close(); setTimeout(function(){ w.print(); }, 500);
+async function send() {
+    var input = document.getElementById('chat-in');
+    var q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    var btn = document.getElementById('send-btn');
+    btn.disabled = true;
+    var msgs = document.getElementById('msgs');
+    var um = document.createElement('div');
+    um.className = 'msg user';
+    um.textContent = q;
+    msgs.appendChild(um);
+    var lm = document.createElement('div');
+    lm.className = 'msg ld';
+    lm.id = 'lm';
+    lm.textContent = 'Analyse...';
+    msgs.appendChild(lm);
+    msgs.scrollTop = msgs.scrollHeight;
+    try {
+        var res = await fetch('/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({question: q, premium: isPremium, questions_used: Q})
+        });
+        var d = await res.json();
+        var el = document.getElementById('lm');
+        if (el) el.remove();
+        var am = document.createElement('div');
+        am.className = 'msg ai';
+        am.textContent = d.reponse;
+        msgs.appendChild(am);
+        msgs.scrollTop = msgs.scrollHeight;
+        if (!isPremium) {
+            Q++;
+            var c = document.getElementById('ctr');
+            var r = 2 - Q;
+            if (r <= 0) {
+                if (c) { c.textContent = 'Limite atteinte'; c.style.color = '#F87171'; }
+                input.disabled = true;
+                btn.disabled = true;
+            } else {
+                if (c) c.textContent = r + ' question gratuite restante';
+                btn.disabled = false;
+            }
+        } else {
+            btn.disabled = false;
+        }
+    } catch(e) {
+        var el = document.getElementById('lm');
+        if (el) el.remove();
+        btn.disabled = false;
+    }
+}
+
+function exportPDF() {
+    var el = document.getElementById('rapport-display');
+    if (!el) return;
+    var w = window.open('', '_blank');
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>NicheAI</title></head><body>' + el.innerHTML + '</body></html>');
+    w.document.close();
+    setTimeout(function(){ w.print(); }, 500);
 }
 </script>
 </body>
