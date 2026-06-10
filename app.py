@@ -83,7 +83,7 @@ Script complet pour premier appel client.
 
 Sois tres precis, donne des vrais chiffres marche, evite les generalites."""
     try:
-        r = cl.messages.create(model="claude-haiku-4-5-20251001", max_tokens=3500,
+        r = cl.messages.create(model="claude-haiku-4-5-20251001", max_tokens=2000,
             messages=[{"role":"user","content":prompt}])
         return r.content[0].text
     except Exception as e:
