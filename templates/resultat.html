@@ -101,6 +101,82 @@ footer p{font-size:12px;color:#334155;margin-top:10px;}
 .dash-bar-fill{height:100%;border-radius:3px;transition:width .8s ease;}
 .dash-bar-row>span:last-child{width:90px;text-align:right;font-size:12px;flex-shrink:0;}
 
+
+/* Sous-titres dans les sections (lignes avec :) */
+.section-block p:not(.pitch-text) {
+    font-size: 14px;
+    color: #94A3B8;
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+/* Lignes de forfait/prix (contiennent EUR et finissent par :) */
+.section-block p strong {
+    color: #fff;
+    font-size: 15px;
+}
+/* Cards de prix */
+.price-card {
+    background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(109,40,217,0.05));
+    border: 1px solid rgba(139,92,246,0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.price-card-name { font-size: 14px; color: #E2E8F0; font-weight: 600; }
+.price-card-amount { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: #8B5CF6; }
+/* Section alternée */
+.section-block:nth-child(even) {
+    background: rgba(139,92,246,0.03);
+    border-color: rgba(139,92,246,0.08);
+}
+/* Pitch block amélioré */
+.pitch-block { border-color: rgba(139,92,246,0.3); }
+.pitch-text {
+    font-size: 16px !important;
+    color: #E2E8F0 !important;
+    line-height: 1.9 !important;
+    font-style: italic;
+    border-left: 3px solid #8B5CF6;
+    padding: 12px 16px;
+    background: rgba(139,92,246,0.05);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 8px;
+}
+/* Numéros de section plus grands */
+.sec-num {
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    min-width: 32px;
+    text-align: center;
+}
+/* Stats inline plus visibles */
+.stat {
+    color: #A78BFA;
+    font-weight: 800;
+    font-family: 'Syne', sans-serif;
+    font-size: 1em;
+    background: rgba(139,92,246,0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+/* Listes plus aérées */
+.md ul { gap: 8px !important; }
+.md ul li {
+    padding: 12px 14px 12px 36px !important;
+    font-size: 14px;
+    border-radius: 10px !important;
+    border-color: rgba(255,255,255,0.06) !important;
+}
+/* Dashboard scores plus grands */
+.dash-score-value { font-size: 36px !important; }
+@media(max-width:640px){
+    .dash-scores { grid-template-columns: 1fr !important; }
+    .dash-bar-row>span:first-child { width: 120px !important; }
+}
+
 </style>
 </head>
 <body>
