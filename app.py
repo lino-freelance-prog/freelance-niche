@@ -33,15 +33,62 @@ def envoyer_email(destinataire, rapport):
 def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif):
     import anthropic as ac
     cl = ac.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    prompt = f"""Rapport premium freelance. Sans emoji. Titres avec #.
-Profil: competences={competences}, secteur={secteur}, experience={experience}, client={client_type}, objectif={objectif}EUR
-Sections: # ANALYSE DE MARCHE, # NICHE RECOMMANDEE, # PITCH LINKEDIN, # TARIFICATION, # TOP 3 PLATEFORMES, # MOTS-CLES SEO, # PLAN 30 JOURS, # TEMPLATE PROSPECTION, # SCRIPT APPEL, # PROFILS REFERENCE
-En francais, concret."""
+    prompt = f"""Tu es un consultant senior en positionnement freelance. Reponds en francais. Sans emoji.
+
+Profil:
+- Competences: {competences}
+- Secteur: {secteur}
+- Experience: {experience}
+- Client cible: {client_type}
+- Objectif mensuel: {objectif}EUR
+
+Commence OBLIGATOIREMENT par ce bloc de metriques (remplace les valeurs par tes analyses reelles):
+
+METRICS_START
+SCORE_POTENTIEL: [nombre entre 60 et 95]/100
+SATURATION: [Faible | Moderee | Forte]
+POTENTIEL_REVENU: [X EUR/mois realiste]
+DEMANDE: [Forte | Moderee | Faible]
+CONCURRENCE: [Faible | Moderee | Forte]
+METRICS_END
+
+Puis redige ces sections avec ## devant chaque titre:
+
+## ANALYSE DE MARCHE
+Donnees chiffrees reelles sur le marche freelance dans ce secteur.
+
+## NICHE RECOMMANDEE
+Positionnement ultra-precis avec justification chiffree.
+
+## PITCH LINKEDIN
+Texte complet pret a copier. Direct, humain, percutant.
+
+## TARIFICATION RECOMMANDEE
+TJM et forfaits avec fourchettes precises.
+
+## TOP 3 PLATEFORMES
+Strategie concrete pour chaque plateforme.
+
+## MOTS-CLES SEO
+Liste des mots-cles prioritaires.
+
+## PLAN 30 JOURS
+Actions semaine par semaine, tres concret.
+
+## TEMPLATE PROSPECTION
+Message complet pret a envoyer.
+
+## SCRIPT APPEL DECOUVERTE
+Script complet pour premier appel client.
+
+Sois tres precis, donne des vrais chiffres marche, evite les generalites."""
     try:
-        r = cl.messages.create(model="claude-haiku-4-5-20251001", max_tokens=3000, messages=[{"role":"user","content":prompt}])
+        r = cl.messages.create(model="claude-haiku-4-5-20251001", max_tokens=3500,
+            messages=[{"role":"user","content":prompt}])
         return r.content[0].text
     except Exception as e:
         return f"Erreur generation: {str(e)}"
+
 
 def md_to_html(text):
     import re
@@ -141,6 +188,96 @@ def md_to_html(text):
     # Fermer les section-blocks
     result = re.sub(r'(<div class="section-block[^>]*>[\s\S]*?)(?=<div class="section-block|$)', r'\1</div>\n', result)
     return result
+
+def md_to_html(text):
+    import re
+
+    # Parser le bloc METRICS
+    metrics = {}
+    metrics_match = re.search(r'METRICS_START\n(.*?)\nMETRICS_END', text, re.DOTALL)
+    if metrics_match:
+        for line in metrics_match.group(1).split('\n'):
+            if ':' in line:
+                k, v = line.split(':', 1)
+                metrics[k.strip()] = v.strip()
+        text = text.replace(metrics_match.group(0), '').strip()
+
+    html = []
+
+    # Rendu du dashboard si métriques présentes
+    if metrics:
+        score = metrics.get('SCORE_POTENTIEL', '82/100').replace('/100','')
+        sat = metrics.get('SATURATION', 'Moderee')
+        rev = metrics.get('POTENTIEL_REVENU', 'N/A')
+        dem = metrics.get('DEMANDE', 'Forte')
+        conc = metrics.get('CONCURRENCE', 'Moderee')
+
+        sat_color = '#4ADE80' if sat == 'Faible' else '#F59E0B' if sat == 'Moderee' else '#F87171'
+        dem_color = '#4ADE80' if dem == 'Forte' else '#F59E0B' if dem == 'Moderee' else '#F87171'
+        conc_color = '#F87171' if conc == 'Forte' else '#F59E0B' if conc == 'Moderee' else '#4ADE80'
+
+        def bar_width(val):
+            return {'Forte': 85, 'Moderee': 55, 'Faible': 30}.get(val, 60)
+
+        html.append(f'''<div class="report-dashboard">
+  <div class="dash-header"><span class="dash-dots"><span style="background:#FF5F57"></span><span style="background:#FFBD2E"></span><span style="background:#28C840"></span></span><span class="dash-title">NicheAI — Rapport Strategique</span></div>
+  <div class="dash-scores">
+    <div class="dash-score-card">
+      <div class="dash-score-label">Score de potentiel</div>
+      <div class="dash-score-value" style="color:#8B5CF6">{score}<span style="font-size:18px;color:#64748B">/100</span></div>
+      <div class="dash-score-sub">Potentiel eleve</div>
+    </div>
+    <div class="dash-score-card">
+      <div class="dash-score-label">Saturation marche</div>
+      <div class="dash-score-value" style="color:{sat_color}">{sat}</div>
+      <div class="dash-score-sub">Opportunite detectee</div>
+    </div>
+  </div>
+  <div class="dash-bars">
+    <div class="dash-bar-row"><span>Potentiel de revenus</span><div class="dash-bar"><div class="dash-bar-fill" style="width:80%;background:#8B5CF6"></div></div><span style="color:#8B5CF6;font-weight:700">{rev}</span></div>
+    <div class="dash-bar-row"><span>Demande marche</span><div class="dash-bar"><div class="dash-bar-fill" style="width:{bar_width(dem)}%;background:{dem_color}"></div></div><span style="color:{dem_color};font-weight:700">{dem}</span></div>
+    <div class="dash-bar-row"><span>Niveau concurrence</span><div class="dash-bar"><div class="dash-bar-fill" style="width:{bar_width(conc)}%;background:{conc_color}"></div></div><span style="color:{conc_color};font-weight:700">{conc}</span></div>
+  </div>
+</div>''')
+
+    # Parser les sections
+    lines = text.split('\n')
+    in_list = False
+    sec_count = 0
+
+    for line in lines:
+        line = line.rstrip()
+        if re.match(r'^#{1,3} ', line):
+            if in_list: html.append('</ul></div>'); in_list = False
+            else:
+                if sec_count > 0: html.append('</div>')
+            title = re.sub(r'^#{1,3} ', '', line)
+            sec_count += 1
+            num = str(sec_count).zfill(2)
+            is_pitch = 'PITCH' in title.upper() or 'LINKEDIN' in title.upper()
+            extra = 'pitch-block' if is_pitch else ''
+            copy_btn = '<button class="copy-btn" onclick="copyPitch(this)">Copier</button>' if is_pitch else ''
+            html.append(f'<div class="section-block {extra}"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span>{copy_btn}</div>')
+        elif re.match(r'^[-*] |^- ', line):
+            if not in_list: html.append('<ul>'); in_list = True
+            item = re.sub(r'^[-*] ', '', line)
+            item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
+            item = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', item)
+            html.append(f'<li>{item}</li>')
+        elif line.strip() == '' or line.strip() == '---':
+            if in_list: html.append('</ul>'); in_list = False
+        else:
+            if in_list: html.append('</ul>'); in_list = False
+            if line.strip():
+                line = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
+                line = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', line)
+                is_pitch_section = sec_count > 0 and ('PITCH' in str(html[-3:]).upper() or 'LINKEDIN' in str(html[-3:]).upper())
+                css = 'pitch-text' if is_pitch_section else ''
+                html.append(f'<p class="{css}">{line}</p>')
+
+    if in_list: html.append('</ul>')
+    if sec_count > 0: html.append('</div>')
+    return '\n'.join(html)
 
 @app.route("/")
 def index():
