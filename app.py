@@ -23,6 +23,30 @@ def supprimer_emojis(texte):
 app = Flask(__name__)
 app.secret_key = "nicheai_secret_2024"
 
+# ===== BASE DE DONNEES + AUTH =====
+import os as _os
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from models import db, User, Rapport
+
+_db_url = _os.getenv("DATABASE_URL", "sqlite:///local.db")
+if _db_url.startswith("postgres://"):
+    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = _db_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "connexion"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
+
+with app.app_context():
+    db.create_all()
+# ===== FIN BLOC DB =====
+
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
@@ -243,6 +267,19 @@ def md_to_html(text):
     return '\n'.join(html)
 
 
+
+def _save_rapport(contenu, secteur, type_rapport):
+    try:
+        if current_user.is_authenticated:
+            titre = "Rapport " + (secteur or "positionnement")
+            r = Rapport(user_id=current_user.id, titre=titre[:255], secteur=(secteur or "")[:255], contenu=contenu, type_rapport=type_rapport)
+            db.session.add(r)
+            if type_rapport == "premium" and not current_user.premium:
+                current_user.premium = True
+            db.session.commit()
+    except Exception as e:
+        print("Erreur sauvegarde rapport:", e)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -304,6 +341,7 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
     rapport_html = md_to_html(rapport_gratuit)
+    _save_rapport(rapport_gratuit, secteur, "gratuit")
     return render_template("resultat.html", rapport=rapport_gratuit, rapport_html=rapport_html, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
 
@@ -334,6 +372,7 @@ def premium_result():
         )
         session["rapport_complet"] = rapport
         session.modified = True
+        _save_rapport(rapport, session.get("secteur",""), "premium")
     rapport_html = md_to_html(rapport)
     return render_template("resultat.html", rapport=rapport, rapport_html=rapport_html, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
@@ -484,6 +523,66 @@ def chat():
         messages=[{"role": "user", "content": contexte}]
     )
     return jsonify({"reponse": supprimer_emojis(reponse.content[0].text)})
+
+
+
+# ===== ROUTES AUTHENTIFICATION =====
+@app.route("/inscription", methods=["GET", "POST"])
+def inscription():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        if not email or not password:
+            return render_template("inscription.html", error="Tous les champs sont requis.")
+        if len(password) < 6:
+            return render_template("inscription.html", error="Mot de passe trop court (min 6 caracteres).")
+        if User.query.filter_by(email=email).first():
+            return render_template("inscription.html", error="Un compte existe deja avec cet email.")
+        user = User(email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        return redirect(url_for("mes_rapports"))
+    return render_template("inscription.html")
+
+
+@app.route("/connexion", methods=["GET", "POST"])
+def connexion():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        user = User.query.filter_by(email=email).first()
+        if not user or not user.check_password(password):
+            return render_template("connexion.html", error="Email ou mot de passe incorrect.")
+        login_user(user)
+        return redirect(url_for("mes_rapports"))
+    return render_template("connexion.html")
+
+
+@app.route("/deconnexion")
+def deconnexion():
+    logout_user()
+    return redirect(url_for("index"))
+
+
+@app.route("/mes-rapports")
+@login_required
+def mes_rapports():
+    rapports = Rapport.query.filter_by(user_id=current_user.id).order_by(Rapport.date_creation.desc()).all()
+    return render_template("mes-rapports.html", rapports=rapports, email=current_user.email, premium=current_user.premium)
+
+
+@app.route("/rapport/<int:rapport_id>")
+@login_required
+def voir_rapport(rapport_id):
+    rapport = db.session.get(Rapport, rapport_id)
+    if not rapport or rapport.user_id != current_user.id:
+        return redirect(url_for("mes_rapports"))
+    rapport_html = md_to_html(rapport.contenu)
+    est_premium = (rapport.type_rapport == "premium")
+    return render_template("resultat.html", rapport=rapport.contenu, rapport_html=rapport_html, premium=est_premium, stripe_key=STRIPE_PUBLIC_KEY)
+# ===== FIN ROUTES AUTH =====
 
 
 if __name__ == "__main__":

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes rapports — NicheAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0B0F;--bg2:#0F0F15;--purple:#6D28FF;--purple-light:#8B5CF6;--purple-glow:rgba(109,40,255,0.3);--text:#F5F0E8;--muted:#6B6878;--border:rgba(255,255,255,0.06);--card:rgba(255,255,255,0.03);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 60px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(11,11,15,0.95);backdrop-filter:blur(12px);z-index:100;}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;color:#fff;text-decoration:none;}
+.logo span{color:var(--purple-light);}
+.nav-right{display:flex;align-items:center;gap:20px;}
+.nav-link{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-link:hover{color:var(--text);}
+.page{max-width:880px;margin:0 auto;padding:56px 24px 80px;}
+.head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:16px;}
+.title{font-family:'Outfit',sans-serif;font-size:34px;font-weight:800;letter-spacing:-.8px;}
+.btn-new{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:linear-gradient(135deg,#8B5CF6,#6D28FF);color:#fff;border:none;border-radius:12px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;box-shadow:0 4px 20px var(--purple-glow);}
+.btn-new:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--purple-glow);}
+.sub{font-size:15px;color:var(--muted);margin-bottom:40px;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+.badge.premium{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);color:var(--purple-light);}
+.badge.free{background:rgba(107,104,120,0.12);border:1px solid rgba(107,104,120,0.25);color:var(--muted);}
+.list{display:flex;flex-direction:column;gap:14px;}
+.rapport{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;transition:all .2s;text-decoration:none;color:inherit;}
+.rapport:hover{border-color:rgba(139,92,246,0.3);transform:translateX(4px);}
+.rapport-info{flex:1;}
+.rapport-titre{font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px;}
+.rapport-meta{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:12px;}
+.rapport-arrow{color:var(--purple-light);font-size:20px;}
+.empty{text-align:center;padding:80px 20px;}
+.empty-icon{font-size:48px;margin-bottom:20px;opacity:.5;}
+.empty-title{font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+.empty-sub{font-size:14px;color:var(--muted);margin-bottom:28px;}
+@media(max-width:640px){nav{padding:16px 20px;}.page{padding:36px 16px 60px;}.title{font-size:26px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Niche<span>AI</span></a>
+  <div class="nav-right">
+    <span class="nav-link">{{ email }}</span>
+    <a href="/deconnexion" class="nav-link">Deconnexion</a>
+  </div>
+</nav>
+<div class="page">
+  <div class="head">
+    <div class="title">Mes rapports</div>
+    <a href="/" class="btn-new">+ Nouveau rapport</a>
+  </div>
+  <div class="sub">{% if premium %}<span class="badge premium">Compte Premium</span>{% else %}<span class="badge free">Compte Gratuit</span>{% endif %}</div>
+
+  {% if rapports %}
+  <div class="list">
+    {% for r in rapports %}
+    <a href="/rapport/{{ r.id }}" class="rapport">
+      <div class="rapport-info">
+        <div class="rapport-titre">{{ r.titre }}</div>
+        <div class="rapport-meta">
+          {% if r.type_rapport == 'premium' %}<span class="badge premium">Premium</span>{% else %}<span class="badge free">Gratuit</span>{% endif %}
+          <span>{{ r.date_creation.strftime('%d/%m/%Y a %H:%M') }}</span>
+        </div>
+      </div>
+      <div class="rapport-arrow">&#8594;</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">&#128196;</div>
+    <div class="empty-title">Aucun rapport pour le moment</div>
+    <div class="empty-sub">Genere ton premier rapport de positionnement freelance</div>
+    <a href="/" class="btn-new">+ Creer mon premier rapport</a>
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>

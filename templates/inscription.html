@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription — NicheAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0B0F;--bg2:#0F0F15;--purple:#6D28FF;--purple-light:#8B5CF6;--purple-glow:rgba(109,40,255,0.3);--text:#F5F0E8;--muted:#6B6878;--border:rgba(255,255,255,0.06);--card:rgba(255,255,255,0.03);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 60px;border-bottom:1px solid var(--border);}
+.logo{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;color:#fff;text-decoration:none;}
+.logo span{color:var(--purple-light);}
+.nav-link{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-link:hover{color:var(--text);}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+.auth-card{width:100%;max-width:420px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:44px 38px;}
+.auth-title{font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px;}
+.auth-sub{font-size:14px;color:var(--muted);margin-bottom:32px;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;}
+.field input{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#fff;outline:none;transition:border-color .2s;}
+.field input:focus{border-color:var(--purple);}
+.hint{font-size:12px;color:var(--muted);margin-top:6px;}
+.btn{width:100%;padding:15px;background:linear-gradient(135deg,#8B5CF6,#6D28FF);color:#fff;border:none;border-radius:12px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px;box-shadow:0 4px 20px var(--purple-glow);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--purple-glow);}
+.msg{font-size:13px;padding:12px 14px;border-radius:10px;margin-bottom:20px;}
+.msg.err{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#F87171;}
+.switch{text-align:center;margin-top:24px;font-size:14px;color:var(--muted);}
+.switch a{color:var(--purple-light);text-decoration:none;font-weight:600;}
+.switch a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">Niche<span>AI</span></a>
+  <a href="/" class="nav-link">&#8592; Accueil</a>
+</nav>
+<div class="wrap">
+  <div class="auth-card">
+    <div class="auth-title">Cree ton compte</div>
+    <div class="auth-sub">Sauvegarde et retrouve tous tes rapports</div>
+    {% if error %}<div class="msg err">{{ error }}</div>{% endif %}
+    <form method="POST" action="/inscription">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="ton@email.com">
+      </div>
+      <div class="field">
+        <label>Mot de passe</label>
+        <input type="password" name="password" required minlength="6" placeholder="********">
+        <div class="hint">Minimum 6 caracteres</div>
+      </div>
+      <button type="submit" class="btn">Creer mon compte</button>
+    </form>
+    <div class="switch">Deja un compte ? <a href="/connexion">Connecte-toi</a></div>
+  </div>
+</div>
+</body>
+</html>
