@@ -1,6 +1,6 @@
-flask
-anthropic
-stripe
-python-dotenv
-sendgrid
-gunicorn
+flask==3.0.3
+anthropic==0.39.0
+stripe==10.5.0
+python-dotenv==1.0.1
+sendgrid==6.11.0
+gunicorn==22.0.0
