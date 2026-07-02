@@ -182,6 +182,25 @@ footer p{font-size:12px;color:#1E293B;margin-top:10px;}
   .dash-scores{grid-template-columns:1fr;}
   .dash-bar-row>span:first-child{width:120px;}
 }
+
+/* ===== ACCORDEON ===== */
+.accordion .acc-toggle{cursor:pointer;user-select:none;display:flex;align-items:center;gap:12px;margin-bottom:0;}
+.accordion .acc-chevron{margin-left:auto;font-size:14px;color:var(--purple-light,#8B5CF6);transition:transform .3s ease;flex-shrink:0;}
+.accordion .copy-btn + .acc-chevron{margin-left:12px;}
+.accordion.open .acc-chevron{transform:rotate(180deg);}
+.accordion .acc-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .3s ease,margin-top .3s ease;margin-top:0;}
+.accordion.open .acc-body{max-height:6000px;opacity:1;margin-top:16px;}
+.accordion:hover{border-color:rgba(139,92,246,0.25);}
+
+/* ===== ZONE VERROUILLEE (gratuit) ===== */
+.locked-zone{display:flex;flex-direction:column;gap:12px;margin-top:14px;}
+.locked-item{position:relative;background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:20px 24px;overflow:hidden;transition:border-color .2s;}
+.locked-header{display:flex;align-items:center;gap:12px;margin-bottom:9px;}
+.lock-icon{font-size:15px;flex-shrink:0;opacity:.85;}
+.locked-title{font-family:'Syne','Outfit',sans-serif;font-size:12px;font-weight:800;color:#8B7BA8;text-transform:uppercase;letter-spacing:1.5px;}
+.locked-teaser{font-size:13px;color:#5B5670;line-height:1.7;}
+.locked-item:hover{border-color:rgba(139,92,246,0.2);}
+.locked-sep{text-align:center;font-size:12px;color:#5B5670;text-transform:uppercase;letter-spacing:2px;margin:24px 0 4px;font-family:'Syne','Outfit',sans-serif;font-weight:700;}
 </style>
 </head>
 <body>
@@ -199,6 +218,15 @@ footer p{font-size:12px;color:#1E293B;margin-top:10px;}
   <div class="divider"></div>
   <div class="md">{{ rapport_html | safe }}</div>
 </div>
+  <div class="locked-sep">&#128274; Contenu premium verrouille</div>
+  <div class="locked-zone">
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">Analyse de marche complete</span></div><p class="locked-teaser">Les vrais chiffres de ta niche : nombre de concurrents, tarifs pratiques, secteurs qui recrutent le plus en ce moment...</p></div>
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">3 forfaits tarifaires detailles</span></div><p class="locked-teaser">Tes offres cles en main avec prix exacts, contenu et delais : de quoi facturer avec confiance des le premier client.</p></div>
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">Top 3 plateformes + strategie</span></div><p class="locked-teaser">Ou trouver tes clients, quels mots-cles utiliser et l'objectif exact a viser sur chaque plateforme en 90 jours.</p></div>
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">8 mots-cles SEO cibles</span></div><p class="locked-teaser">Les termes exacts que tes prospects tapent, classes par volume, pour etre trouve au lieu de chercher.</p></div>
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">Plan d'action 30 jours</span></div><p class="locked-teaser">Semaine par semaine, jour par jour : exactement quoi faire pour decrocher ton premier client en un mois.</p></div>
+    <div class="locked-item"><div class="locked-header"><span class="lock-icon">&#128274;</span><span class="locked-title">Templates de prospection</span></div><p class="locked-teaser">Messages prets a envoyer, personnalises, pour contacter tes prospects sans te prendre la tete.</p></div>
+  </div>
 <div class="unlock">
   <div class="unlock-lbl">Rapport complet</div>
   <div class="unlock-title">Debloquez votre analyse strategique integrale</div>
@@ -306,7 +334,13 @@ async function appliquerCode() {
     }
 }
 
-function copySection(btn) {
+function toggleAcc(header){
+    var block = header.closest('.accordion');
+    if(block) block.classList.toggle('open');
+}
+
+function copySection(ev, btn) {
+    if(ev) ev.stopPropagation();
     var block = btn.closest('.section-block');
     var texts = [];
     block.querySelectorAll('p, li').forEach(function(el){ texts.push(el.innerText); });

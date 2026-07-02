@@ -183,30 +183,35 @@ def md_to_html(text):
     in_list = False
     sec_count = 0
     current_section_type = None
+    body_open = False  # le body de l'accordeon est-il ouvert
 
-    SECTION_ICONS = {
-        'ANALYSE': '01',
-        'NICHE': '02',
-        'PITCH': '03',
-        'TARIF': '04',
-        'PLATEFORME': '05',
-        'MOT': '06',
-        'PLAN': '07',
-        'TEMPLATE': '08',
-        'PROSPECTION': '08',
-        'SCRIPT': '09',
-        'APPEL': '09',
-        'PROFIL': '10',
-    }
+    def close_section():
+        parts = []
+        if in_list:
+            parts.append('</ul>')
+        if body_open:
+            parts.append('</div>')  # ferme .acc-body
+            parts.append('</div>')  # ferme .section-block
+        return parts
 
     for line in lines:
         line = line.rstrip()
         if re.match(r'^#{1,3} ', line):
-            if in_list: html.append('</ul>'); in_list = False
-            if sec_count > 0: html.append('</div>')
+            # Fermer la section precedente
+            if in_list:
+                html.append('</ul>')
+                in_list = False
+            if body_open:
+                html.append('</div>')  # .acc-body
+                html.append('</div>')  # .section-block
+                body_open = False
+
             title = re.sub(r'^#{1,3} ', '', line).strip()
             sec_count += 1
             num = str(sec_count).zfill(2)
+            # Premiere section ouverte, le reste ferme
+            is_open = (sec_count == 1)
+            open_cls = ' open' if is_open else ''
 
             title_upper = title.upper()
             is_pitch = 'PITCH' in title_upper or 'LINKEDIN' in title_upper
@@ -214,21 +219,29 @@ def md_to_html(text):
             is_plan = 'PLAN' in title_upper or '30' in title_upper
             is_template = 'TEMPLATE' in title_upper or 'PROSPECTION' in title_upper or 'SCRIPT' in title_upper or 'APPEL' in title_upper
 
+            block_cls = 'section-block'
+            copy_btn = ''
             if is_pitch:
                 current_section_type = 'pitch'
-                html.append(f'<div class="section-block pitch-block"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span><button class="copy-btn" onclick="copySection(this)">Copier</button></div>')
+                block_cls += ' pitch-block'
+                copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
             elif is_pricing:
                 current_section_type = 'pricing'
-                html.append(f'<div class="section-block pricing-block"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span></div>')
+                block_cls += ' pricing-block'
             elif is_plan:
                 current_section_type = 'plan'
-                html.append(f'<div class="section-block plan-block"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span></div>')
+                block_cls += ' plan-block'
             elif is_template:
                 current_section_type = 'template'
-                html.append(f'<div class="section-block template-block"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span><button class="copy-btn" onclick="copySection(this)">Copier</button></div>')
+                block_cls += ' template-block'
+                copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
             else:
                 current_section_type = 'default'
-                html.append(f'<div class="section-block"><div class="section-header"><span class="sec-num">{num}</span><span class="sec-title">{title}</span></div>')
+
+            html.append(f'<div class="{block_cls} accordion{open_cls}">')
+            html.append(f'<div class="section-header acc-toggle" onclick="toggleAcc(this)"><span class="sec-num">{num}</span><span class="sec-title">{title}</span>{copy_btn}<span class="acc-chevron">&#9662;</span></div>')
+            html.append('<div class="acc-body">')
+            body_open = True
 
         elif re.match(r'^[-*] |^- ', line):
             if not in_list: html.append('<ul>'); in_list = True
@@ -252,7 +265,6 @@ def md_to_html(text):
             if line.strip():
                 line_proc = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
                 line_proc = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', line_proc)
-                # Semaines dans le plan
                 if current_section_type == 'plan' and re.match(r'^Semaine \d', line.strip()):
                     html.append(f'<div class="week-header">{line_proc}</div>')
                 elif current_section_type == 'pitch':
@@ -263,9 +275,10 @@ def md_to_html(text):
                     html.append(f'<p>{line_proc}</p>')
 
     if in_list: html.append('</ul>')
-    if sec_count > 0: html.append('</div>')
+    if body_open:
+        html.append('</div>')  # .acc-body
+        html.append('</div>')  # .section-block
     return '\n'.join(html)
-
 
 
 def _save_rapport(contenu, secteur, type_rapport):
