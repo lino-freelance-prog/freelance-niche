@@ -104,12 +104,27 @@ Message complet (200-250 mots) personnalisable. Commence par [Prenom], mentionne
 ## SCRIPT APPEL DECOUVERTE
 Deroulé complet d'un appel de 30 minutes: accueil (2 min), diagnostic besoins (10 min), presentation solution (10 min), closing (8 min). Questions exactes a poser, reponses aux objections courantes.
 
-Sois tres precis. Evite les generalites vagues. Chaque conseil doit etre actionnable immediatement."""
+Sois tres precis. Evite les generalites vagues. Chaque conseil doit etre actionnable immediatement.## LIVRABLE - PROFIL MALT PRET A COPIER
+Redige le profil Malt complet et pret a l'emploi: un titre accrocheur (60 caracteres max), une bio de 400-500 caracteres a la premiere personne qui vend, et 8 tags/competences. Texte fini, copier-coller direct, pas de conseils.
+
+## LIVRABLE - BIO LINKEDIN
+Redige la section "A propos" LinkedIn complete (200-250 mots), a la premiere personne, avec accroche, parcours, proposition de valeur et appel a l'action. Texte fini pret a coller.
+
+## LIVRABLE - 5 MESSAGES DE PROSPECTION
+Redige 5 messages de prospection differents, prets a envoyer, personnalises avec [Prenom] et [Entreprise] a remplacer. Chacun 60-80 mots, accroche + valeur + call to action. Numerote-les de 1 a 5.
+
+## LIVRABLE - EMAIL DE RELANCE
+Redige un email de relance pret a envoyer pour un prospect qui n'a pas repondu. 80-100 mots, ton amical mais professionnel, avec [Prenom].
+
+## LIVRABLE - PLANNING DE CONTENU 30 JOURS
+Cree un planning concret sur 4 semaines: pour chaque semaine, 3 idees de posts precises (sujet + format + objectif) adaptees au secteur du freelance. 
+
+Actionnable immediatement."""
 
     try:
         r = cl.messages.create(
             model="claude-sonnet-4-5-20250929",
-            max_tokens=3000,
+            max_tokens=4500,
             messages=[{"role": "user", "content": prompt}]
         )
         return supprimer_emojis(r.content[0].text)
@@ -493,11 +508,27 @@ Message complet personnalisable (200-250 mots). Pret a envoyer sur LinkedIn.
 Deroulé complet 30 minutes. Questions exactes, reponses aux objections.
 
 ## PROFILS DE REFERENCE
-3 freelances qui reussissent dans cette niche. Pourquoi ils marchent, quoi reproduire."""
+3 freelances qui reussissent dans cette niche. Pourquoi ils marchent, quoi reproduire.
+## LIVRABLE - PROFIL MALT PRET A COPIER
+Redige le profil Malt complet et pret a l'emploi: un titre accrocheur (60 caracteres max), une bio de 400-500 caracteres a la premiere personne qui vend, et 8 tags/competences. Texte fini, copier-coller direct, pas de conseils.
+
+## LIVRABLE - BIO LINKEDIN
+Redige la section "A propos" LinkedIn complete (200-250 mots), a la premiere personne, avec accroche, parcours, proposition de valeur et appel a l'action. Texte fini pret a coller.
+
+## LIVRABLE - 5 MESSAGES DE PROSPECTION
+Redige 5 messages de prospection differents, prets a envoyer, personnalises avec [Prenom] et [Entreprise] a remplacer. Chacun 60-80 mots, accroche + valeur + call to action. Numerote-les de 1 a 5.
+
+## LIVRABLE - EMAIL DE RELANCE
+Redige un email de relance pret a envoyer pour un prospect qui n'a pas repondu. 80-100 mots, ton amical mais professionnel, avec [Prenom].
+
+## LIVRABLE - PLANNING DE CONTENU 30 JOURS
+Cree un planning concret sur 4 semaines: pour chaque semaine, 3 idees de posts precises (sujet + format + objectif) adaptees au secteur du freelance. 
+
+Actionnable immediatement."""
 
     response = client.messages.create(
         model="claude-sonnet-4-5-20250929",
-        max_tokens=3000,
+        max_tokens=4500,
         messages=[{"role": "user", "content": prompt_premium}]
     )
 
