@@ -108,8 +108,8 @@ Sois tres precis. Evite les generalites vagues. Chaque conseil doit etre actionn
 
     try:
         r = cl.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=2000,
+            model="claude-sonnet-4-5-20250929",
+            max_tokens=3000,
             messages=[{"role": "user", "content": prompt}]
         )
         return supprimer_emojis(r.content[0].text)
@@ -479,8 +479,8 @@ Deroulé complet 30 minutes. Questions exactes, reponses aux objections.
 3 freelances qui reussissent dans cette niche. Pourquoi ils marchent, quoi reproduire."""
 
     response = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=2000,
+        model="claude-sonnet-4-5-20250929",
+        max_tokens=3000,
         messages=[{"role": "user", "content": prompt_premium}]
     )
 
