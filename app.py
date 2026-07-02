@@ -368,7 +368,11 @@ def code_promo():
     session.modified = True
     return jsonify({"success": True})
 
-
+@app.route("/loading")
+def loading():
+    if not session.get("competences"):
+        return redirect(url_for("index"))
+    return render_template("loading.html")
 @app.route("/premium-result")
 def premium_result():
     rapport = session.get("rapport_complet")

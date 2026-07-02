@@ -36,12 +36,11 @@ p{font-size:15px;color:#64748B;margin-bottom:8px;line-height:1.7;}
 </div>
 <script>
 var steps = document.querySelectorAll('.step');
-var i = 0;
+var idx = 0;
 setInterval(function(){
   steps.forEach(function(s){s.classList.remove('active');});
-  i = (i+1) % steps.length;
-  steps[i].classList.add('active');
-}, 4000);
+  steps[idx % steps.length].classList.add('active');
+  idx++;
+}, 2500);
+setTimeout(function(){ window.location.href = '/premium-result'; }, 600);
 </script>
-</body>
-</html>

@@ -319,7 +319,7 @@ async function appliquerCode() {
         if (d.success) {
             msg.textContent = 'Code valide ! Chargement...';
             msg.className = 'promo-msg ok';
-            setTimeout(function(){ window.location.href = '/premium-result'; }, 800);
+            setTimeout(function(){ window.location.href = '/loading'; }, 800);
         } else {
             msg.textContent = d.message || 'Code invalide.';
             msg.className = 'promo-msg err';
