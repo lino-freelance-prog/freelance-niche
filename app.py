@@ -68,6 +68,8 @@ def generer_rapport_premium_rapide(competences, secteur, experience, client_type
 
     prompt = f"""Tu es un consultant senior en positionnement freelance avec 10 ans d'experience. Tu connais parfaitement le marche freelance francais (Malt, Upwork, LinkedIn, Creem). Reponds en francais. Sans emoji. Sois ultra-precis, donne de vrais chiffres.
 
+Tu as acces a un outil de recherche web. UTILISE-LE activement (plusieurs recherches si besoin) pour verifier ou trouver: les tarifs reels pratiques sur Malt/LinkedIn dans ce secteur, le volume de missions/demande actuel, les tendances 2025-2026 du secteur concerne, et la concurrence reelle. N'invente pas de chiffres si tu peux les verifier par une recherche.
+
 Profil du freelance:
 - Competences: {competences}
 - Secteur: {secteur}
@@ -76,6 +78,8 @@ Profil du freelance:
 - Objectif mensuel: {objectif} EUR{contexte_perso}
 
 IMPORTANT: si des missions recentes, un tarif actuel, une zone geographique ou une contrainte sont fournis ci-dessus, tu DOIS t'appuyer dessus explicitement dans tes recommandations (ex: comparer le tarif actuel au tarif recommande, adapter le plan d'action a la contrainte mentionnee, ancrer le pitch et la niche recommandee sur les missions reelles citees). Ne les ignore pas et ne les reformule pas de maniere generique.
+
+Ne redige AUCUN titre, introduction, phrase d'accroche ou texte quelconque avant le bloc METRICS. Ta reponse doit commencer directement par "METRICS_START", sans rien avant.
 
 Commence OBLIGATOIREMENT par ce bloc de metriques (valeurs reelles basees sur le profil):
 
@@ -136,10 +140,15 @@ Actionnable immediatement."""
     try:
         r = cl.messages.create(
             model="claude-sonnet-4-5-20250929",
-            max_tokens=4500,
+            max_tokens=8000,
+            tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
             messages=[{"role": "user", "content": prompt}]
         )
-        return supprimer_emojis(r.content[0].text)
+        texte_complet = ""
+        for block in r.content:
+            if block.type == "text":
+                texte_complet += block.text
+        return supprimer_emojis(texte_complet)
     except Exception as e:
         return f"Erreur generation: {str(e)}"
 
@@ -205,106 +214,104 @@ def md_to_html(text):
   </div>
 </div>''')
 
-    # Parser les sections
-    lines = text.split('\n')
-    in_list = False
-    sec_count = 0
-    current_section_type = None
-    body_open = False  # le body de l'accordeon est-il ouvert
-
-    def close_section():
-        parts = []
-        if in_list:
-            parts.append('</ul>')
-        if body_open:
-            parts.append('</div>')  # ferme .acc-body
-            parts.append('</div>')  # ferme .section-block
-        return parts
-
-    for line in lines:
+    # Decouper le texte en sections (titre + lignes de contenu brutes)
+    raw_sections = []
+    current_title = None
+    current_lines = []
+    for line in text.split('\n'):
         line = line.rstrip()
         if re.match(r'^#{1,3} ', line):
-            # Fermer la section precedente
-            if in_list:
-                html.append('</ul>')
-                in_list = False
-            if body_open:
-                html.append('</div>')  # .acc-body
-                html.append('</div>')  # .section-block
-                body_open = False
-
-            title = re.sub(r'^#{1,3} ', '', line).strip()
-            sec_count += 1
-            num = str(sec_count).zfill(2)
-            # Premiere section ouverte, le reste ferme
-            is_open = (sec_count == 1)
-            open_cls = ' open' if is_open else ''
-
-            title_upper = title.upper()
-            is_pitch = 'PITCH' in title_upper or 'LINKEDIN' in title_upper
-            is_pricing = 'TARIF' in title_upper or 'PRIX' in title_upper
-            is_plan = 'PLAN' in title_upper or '30' in title_upper
-            is_template = 'TEMPLATE' in title_upper or 'PROSPECTION' in title_upper or 'SCRIPT' in title_upper or 'APPEL' in title_upper
-
-            block_cls = 'section-block'
-            copy_btn = ''
-            if is_pitch:
-                current_section_type = 'pitch'
-                block_cls += ' pitch-block'
-                copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
-            elif is_pricing:
-                current_section_type = 'pricing'
-                block_cls += ' pricing-block'
-            elif is_plan:
-                current_section_type = 'plan'
-                block_cls += ' plan-block'
-            elif is_template:
-                current_section_type = 'template'
-                block_cls += ' template-block'
-                copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
-            else:
-                current_section_type = 'default'
-
-            html.append(f'<div class="{block_cls} accordion{open_cls}">')
-            html.append(f'<div class="section-header acc-toggle" onclick="toggleAcc(this)"><span class="sec-num">{num}</span><span class="sec-title">{title}</span>{copy_btn}<span class="acc-chevron">&#9662;</span></div>')
-            html.append('<div class="acc-body">')
-            body_open = True
-
-        elif re.match(r'^[-*] |^- ', line):
-            if not in_list: html.append('<ul>'); in_list = True
-            item = re.sub(r'^[-*] ', '', line)
-            item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
-            item = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois|EUR/an)[^\s,\.]*)', r'<span class="stat">\1</span>', item)
-            html.append(f'<li>{item}</li>')
-
-        elif re.match(r'^\d+\. ', line):
-            if not in_list: html.append('<ul class="num-list">'); in_list = True
-            item = re.sub(r'^\d+\. ', '', line)
-            item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
-            item = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', item)
-            html.append(f'<li>{item}</li>')
-
-        elif line.strip() == '' or line.strip() == '---':
-            if in_list: html.append('</ul>'); in_list = False
-
+            if current_title is not None:
+                raw_sections.append((current_title, current_lines))
+            current_title = re.sub(r'^#{1,3} ', '', line).strip()
+            current_lines = []
         else:
-            if in_list: html.append('</ul>'); in_list = False
-            if line.strip():
-                line_proc = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
-                line_proc = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', line_proc)
-                if current_section_type == 'plan' and re.match(r'^Semaine \d', line.strip()):
-                    html.append(f'<div class="week-header">{line_proc}</div>')
-                elif current_section_type == 'pitch':
-                    html.append(f'<p class="pitch-text">{line_proc}</p>')
-                elif current_section_type == 'template':
-                    html.append(f'<p class="template-text">{line_proc}</p>')
-                else:
-                    html.append(f'<p>{line_proc}</p>')
+            current_lines.append(line)
+    if current_title is not None:
+        raw_sections.append((current_title, current_lines))
 
-    if in_list: html.append('</ul>')
-    if body_open:
+    # Ignorer toute section sans contenu reel (titre parasite, section vide, etc.)
+    def _has_content(lines):
+        return any(l.strip() and l.strip() != '---' for l in lines)
+
+    sections = [(t, l) for t, l in raw_sections if _has_content(l)]
+
+    def _render_body(lines, section_type):
+        body_html = []
+        in_list_local = False
+        for line in lines:
+            if re.match(r'^[-*] |^- ', line):
+                if not in_list_local:
+                    body_html.append('<ul>'); in_list_local = True
+                item = re.sub(r'^[-*] ', '', line)
+                item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
+                item = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois|EUR/an)[^\s,\.]*)', r'<span class="stat">\1</span>', item)
+                body_html.append(f'<li>{item}</li>')
+            elif re.match(r'^\d+\. ', line):
+                if not in_list_local:
+                    body_html.append('<ul class="num-list">'); in_list_local = True
+                item = re.sub(r'^\d+\. ', '', line)
+                item = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', item)
+                item = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', item)
+                body_html.append(f'<li>{item}</li>')
+            elif line.strip() == '' or line.strip() == '---':
+                if in_list_local:
+                    body_html.append('</ul>'); in_list_local = False
+            else:
+                if in_list_local:
+                    body_html.append('</ul>'); in_list_local = False
+                if line.strip():
+                    line_proc = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
+                    line_proc = re.sub(r'(\d+[\s]?(?:EUR|€|%|k€|K€|EUR/h|EUR/mois)[^\s,\.]*)', r'<span class="stat">\1</span>', line_proc)
+                    if section_type == 'plan' and re.match(r'^Semaine \d', line.strip()):
+                        body_html.append(f'<div class="week-header">{line_proc}</div>')
+                    elif section_type == 'pitch':
+                        body_html.append(f'<p class="pitch-text">{line_proc}</p>')
+                    elif section_type == 'template':
+                        body_html.append(f'<p class="template-text">{line_proc}</p>')
+                    else:
+                        body_html.append(f'<p>{line_proc}</p>')
+        if in_list_local:
+            body_html.append('</ul>')
+        return body_html
+
+    for idx, (title, lines) in enumerate(sections):
+        sec_count = idx + 1
+        num = str(sec_count).zfill(2)
+        is_open = (sec_count == 1)
+        open_cls = ' open' if is_open else ''
+
+        title_upper = title.upper()
+        is_pitch = 'PITCH' in title_upper or 'LINKEDIN' in title_upper
+        is_pricing = 'TARIF' in title_upper or 'PRIX' in title_upper
+        is_plan = 'PLAN' in title_upper or '30' in title_upper
+        is_template = 'TEMPLATE' in title_upper or 'PROSPECTION' in title_upper or 'SCRIPT' in title_upper or 'APPEL' in title_upper
+
+        block_cls = 'section-block'
+        copy_btn = ''
+        section_type = 'default'
+        if is_pitch:
+            section_type = 'pitch'
+            block_cls += ' pitch-block'
+            copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
+        elif is_pricing:
+            section_type = 'pricing'
+            block_cls += ' pricing-block'
+        elif is_plan:
+            section_type = 'plan'
+            block_cls += ' plan-block'
+        elif is_template:
+            section_type = 'template'
+            block_cls += ' template-block'
+            copy_btn = '<button class="copy-btn" onclick="copySection(event, this)">Copier</button>'
+
+        html.append(f'<div class="{block_cls} accordion{open_cls}">')
+        html.append(f'<div class="section-header acc-toggle" onclick="toggleAcc(this)"><span class="sec-num">{num}</span><span class="sec-title">{title}</span>{copy_btn}<span class="acc-chevron">&#9662;</span></div>')
+        html.append('<div class="acc-body">')
+        html.extend(_render_body(lines, section_type))
         html.append('</div>')  # .acc-body
         html.append('</div>')  # .section-block
+
     return '\n'.join(html)
 
 
@@ -375,6 +382,8 @@ Profil :
 - Experience : {experience}
 - Client cible : {client_type}
 - Objectif mensuel : {objectif} EUR{contexte_perso_gratuit}
+
+Ne redige AUCUN titre, introduction ou phrase d'accroche avant la premiere section. Commence directement par "## NICHE RECOMMANDEE".
 
 Redige un apercu avec exactement ces 3 sections:
 
@@ -528,6 +537,8 @@ Profil du freelance:
 
 IMPORTANT: si des missions recentes, un tarif actuel, une zone geographique ou une contrainte sont fournis ci-dessus, tu DOIS t'appuyer dessus explicitement dans tes recommandations (ex: comparer le tarif actuel au tarif recommande, adapter le plan d'action a la contrainte mentionnee, ancrer le pitch et la niche recommandee sur les missions reelles citees). Ne les ignore pas et ne les reformule pas de maniere generique.
 
+Ne redige AUCUN titre, introduction, phrase d'accroche ou texte quelconque avant le bloc METRICS. Ta reponse doit commencer directement par "METRICS_START", sans rien avant.
+
 Commence OBLIGATOIREMENT par ce bloc de metriques:
 
 METRICS_START
@@ -588,7 +599,8 @@ Actionnable immediatement."""
 
     response = client.messages.create(
         model="claude-sonnet-4-5-20250929",
-        max_tokens=4500,
+        max_tokens=8000,
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
         messages=[{"role": "user", "content": prompt_premium}]
     )
 
