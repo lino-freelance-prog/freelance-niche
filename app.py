@@ -54,8 +54,18 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
 def envoyer_email(destinataire, rapport):
     print(f"Email a envoyer a {destinataire}")
 
-def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif):
+def generer_rapport_premium_rapide(competences, secteur, experience, client_type, objectif, missions_recentes="", tarif_actuel="", zone_geo="", contrainte_principale=""):
     cl = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    contexte_perso = ""
+    if missions_recentes:
+        contexte_perso += f"\n- Missions/clients recents: {missions_recentes}"
+    if tarif_actuel:
+        contexte_perso += f"\n- Tarif actuellement pratique: {tarif_actuel}"
+    if zone_geo:
+        contexte_perso += f"\n- Zone geographique: {zone_geo}"
+    if contrainte_principale:
+        contexte_perso += f"\n- Contrainte principale actuelle: {contrainte_principale}"
+
     prompt = f"""Tu es un consultant senior en positionnement freelance avec 10 ans d'experience. Tu connais parfaitement le marche freelance francais (Malt, Upwork, LinkedIn, Creem). Reponds en francais. Sans emoji. Sois ultra-precis, donne de vrais chiffres.
 
 Profil du freelance:
@@ -63,7 +73,9 @@ Profil du freelance:
 - Secteur: {secteur}
 - Experience: {experience}
 - Client cible: {client_type}
-- Objectif mensuel: {objectif} EUR
+- Objectif mensuel: {objectif} EUR{contexte_perso}
+
+IMPORTANT: si des missions recentes, un tarif actuel, une zone geographique ou une contrainte sont fournis ci-dessus, tu DOIS t'appuyer dessus explicitement dans tes recommandations (ex: comparer le tarif actuel au tarif recommande, adapter le plan d'action a la contrainte mentionnee, ancrer le pitch et la niche recommandee sur les missions reelles citees). Ne les ignore pas et ne les reformule pas de maniere generique.
 
 Commence OBLIGATOIREMENT par ce bloc de metriques (valeurs reelles basees sur le profil):
 
@@ -296,11 +308,21 @@ def md_to_html(text):
     return '\n'.join(html)
 
 
-def _save_rapport(contenu, secteur, type_rapport):
+def _save_rapport(contenu, secteur, type_rapport, missions_recentes="", tarif_actuel="", zone_geo="", contrainte_principale=""):
     try:
         if current_user.is_authenticated:
             titre = "Rapport " + (secteur or "positionnement")
-            r = Rapport(user_id=current_user.id, titre=titre[:255], secteur=(secteur or "")[:255], contenu=contenu, type_rapport=type_rapport)
+            r = Rapport(
+                user_id=current_user.id,
+                titre=titre[:255],
+                secteur=(secteur or "")[:255],
+                contenu=contenu,
+                type_rapport=type_rapport,
+                missions_recentes=missions_recentes or None,
+                tarif_actuel=(tarif_actuel or "")[:100] or None,
+                zone_geo=(zone_geo or "")[:255] or None,
+                contrainte_principale=(contrainte_principale or "")[:255] or None,
+            )
             db.session.add(r)
             if type_rapport == "premium" and not current_user.premium:
                 current_user.premium = True
@@ -320,6 +342,10 @@ def generer():
     client_type = request.form.get("client_type")
     objectif = request.form.get("objectif")
     email = request.form.get("email", "")
+    missions_recentes = request.form.get("missions_recentes", "")
+    tarif_actuel = request.form.get("tarif_actuel", "")
+    zone_geo = request.form.get("zone_geo", "")
+    contrainte_principale = request.form.get("contrainte_principale", "")
 
     session['email'] = email
     session['competences'] = competences
@@ -327,6 +353,16 @@ def generer():
     session['experience'] = experience
     session['client_type'] = client_type
     session['objectif'] = objectif
+    session['missions_recentes'] = missions_recentes
+    session['tarif_actuel'] = tarif_actuel
+    session['zone_geo'] = zone_geo
+    session['contrainte_principale'] = contrainte_principale
+
+    contexte_perso_gratuit = ""
+    if zone_geo:
+        contexte_perso_gratuit += f"\n- Zone geographique: {zone_geo}"
+    if contrainte_principale:
+        contexte_perso_gratuit += f"\n- Contrainte principale: {contrainte_principale}"
 
     prompt_gratuit = f"""Tu es un consultant expert en positionnement freelance.
 Reponds de maniere sobre, directe et professionnelle.
@@ -338,7 +374,7 @@ Profil :
 - Secteur : {secteur}
 - Experience : {experience}
 - Client cible : {client_type}
-- Objectif mensuel : {objectif} EUR
+- Objectif mensuel : {objectif} EUR{contexte_perso_gratuit}
 
 Redige un apercu avec exactement ces 3 sections:
 
@@ -369,7 +405,7 @@ Debloque l'analyse complete pour acceder a l'integralite du rapport."""
 
     rapport_gratuit = supprimer_emojis(message_gratuit.content[0].text)
     rapport_html = md_to_html(rapport_gratuit)
-    _save_rapport(rapport_gratuit, secteur, "gratuit")
+    _save_rapport(rapport_gratuit, secteur, "gratuit", missions_recentes, tarif_actuel, zone_geo, contrainte_principale)
     return render_template("resultat.html", rapport=rapport_gratuit, rapport_html=rapport_html, premium=False, stripe_key=STRIPE_PUBLIC_KEY)
 
 
@@ -400,11 +436,19 @@ def premium_result():
             session.get("secteur", ""),
             session.get("experience", ""),
             session.get("client_type", ""),
-            session.get("objectif", "")
+            session.get("objectif", ""),
+            session.get("missions_recentes", ""),
+            session.get("tarif_actuel", ""),
+            session.get("zone_geo", ""),
+            session.get("contrainte_principale", "")
         )
         session["rapport_complet"] = rapport
         session.modified = True
-        _save_rapport(rapport, session.get("secteur",""), "premium")
+        _save_rapport(
+            rapport, session.get("secteur", ""), "premium",
+            session.get("missions_recentes", ""), session.get("tarif_actuel", ""),
+            session.get("zone_geo", ""), session.get("contrainte_principale", "")
+        )
     rapport_html = md_to_html(rapport)
     return render_template("resultat.html", rapport=rapport, rapport_html=rapport_html, premium=True, stripe_key=STRIPE_PUBLIC_KEY)
 
@@ -455,9 +499,23 @@ def success():
     client_type = session.get('client_type')
     objectif = session.get('objectif')
     email = session.get('email')
+    missions_recentes = session.get('missions_recentes', '')
+    tarif_actuel = session.get('tarif_actuel', '')
+    zone_geo = session.get('zone_geo', '')
+    contrainte_principale = session.get('contrainte_principale', '')
 
     if not competences:
         return redirect(url_for('index'))
+
+    contexte_perso = ""
+    if missions_recentes:
+        contexte_perso += f"\n- Missions/clients recents: {missions_recentes}"
+    if tarif_actuel:
+        contexte_perso += f"\n- Tarif actuellement pratique: {tarif_actuel}"
+    if zone_geo:
+        contexte_perso += f"\n- Zone geographique: {zone_geo}"
+    if contrainte_principale:
+        contexte_perso += f"\n- Contrainte principale actuelle: {contrainte_principale}"
 
     prompt_premium = f"""Tu es un consultant senior en positionnement freelance avec 10 ans d'experience. Tu connais parfaitement le marche freelance francais. Reponds en francais. Sans emoji. Donne de vrais chiffres issus de ta recherche web.
 
@@ -466,7 +524,9 @@ Profil du freelance:
 - Secteur: {secteur}
 - Experience: {experience}
 - Client cible: {client_type}
-- Objectif mensuel: {objectif} EUR
+- Objectif mensuel: {objectif} EUR{contexte_perso}
+
+IMPORTANT: si des missions recentes, un tarif actuel, une zone geographique ou une contrainte sont fournis ci-dessus, tu DOIS t'appuyer dessus explicitement dans tes recommandations (ex: comparer le tarif actuel au tarif recommande, adapter le plan d'action a la contrainte mentionnee, ancrer le pitch et la niche recommandee sur les missions reelles citees). Ne les ignore pas et ne les reformule pas de maniere generique.
 
 Commence OBLIGATOIREMENT par ce bloc de metriques:
 
@@ -539,6 +599,7 @@ Actionnable immediatement."""
 
     rapport_complet = supprimer_emojis(rapport_complet)
     session['rapport_complet'] = rapport_complet
+    _save_rapport(rapport_complet, secteur, "premium", missions_recentes, tarif_actuel, zone_geo, contrainte_principale)
 
     if email:
         envoyer_email(email, rapport_complet)

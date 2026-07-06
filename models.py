@@ -31,3 +31,9 @@ class Rapport(db.Model):
     contenu = db.Column(db.Text, nullable=False)
     type_rapport = db.Column(db.String(20), default="gratuit")
     date_creation = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Champs de personnalisation avancee (etape 2 roadmap)
+    missions_recentes = db.Column(db.Text)
+    tarif_actuel = db.Column(db.String(100))
+    zone_geo = db.Column(db.String(255))
+    contrainte_principale = db.Column(db.String(255))
