@@ -492,6 +492,7 @@ def paiement():
                 "quantity": 1,
             }],
             mode="payment",
+            allow_promotion_codes=True,
             success_url=request.host_url + "success",
             cancel_url=request.host_url + "cancel",
         )

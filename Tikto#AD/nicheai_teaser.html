@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NicheAI — Teaser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0912;
+    --surface: #15111f;
+    --surface-2: #1c1730;
+    --violet: #6d28ff;
+    --violet-soft: #b39dff;
+    --violet-glow: rgba(109,40,255,0.45);
+    --gold: #f0b64d;
+    --text: #f6f4ff;
+    --text-dim: #948da9;
+    --green: #35d68a;
+    --red: #ff6161;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{
+    height:100%;
+    background: #05050a;
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding: 24px;
+  }
+
+  .stage-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+
+  .phone-stage{
+    position:relative;
+    width: min(420px, 92vw);
+    aspect-ratio: 9/16;
+    background: radial-gradient(120% 100% at 50% 0%, #17112b 0%, var(--bg) 55%, #050409 100%);
+    border-radius: 28px;
+    overflow:hidden;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 40px 80px -20px rgba(109,40,255,0.35),
+      0 0 120px -40px rgba(109,40,255,0.5);
+    cursor:pointer;
+  }
+
+  /* barre de progression type story */
+  .progress-row{
+    position:absolute;
+    top:14px; left:14px; right:14px;
+    display:flex;
+    gap:6px;
+    z-index:50;
+  }
+  .seg{
+    flex:1;
+    height:3px;
+    border-radius:3px;
+    background: rgba(255,255,255,0.14);
+    overflow:hidden;
+  }
+  .seg-fill{
+    height:100%;
+    width:0%;
+    background: var(--violet-soft);
+    border-radius:3px;
+  }
+  .seg-fill.animate{ transition: width linear; }
+  .seg-fill.done{ width:100% !important; transition:none; }
+
+  .scene{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 70px 34px 50px;
+    text-align:center;
+    opacity:0;
+    visibility:hidden;
+    transition: opacity 0.5s ease;
+  }
+  .scene.active{
+    opacity:1;
+    visibility:visible;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform:uppercase;
+    color: var(--violet-soft);
+    margin-bottom: 18px;
+  }
+
+  /* Scene 1 : hook */
+  #s1 .line{
+    font-family:'Unbounded', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.18;
+    opacity:0;
+    transform: translateY(14px);
+  }
+  #s1 .line.hit{ animation: riseIn 0.6s cubic-bezier(.2,.7,.3,1) forwards; }
+  #s1 .accent{ color: var(--violet-soft); }
+
+  @keyframes riseIn{
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* Scene 2 : probleme */
+  #s2 .big{
+    font-family:'Unbounded', sans-serif;
+    font-weight:600;
+    font-size: clamp(24px, 7.2vw, 32px);
+    line-height:1.25;
+  }
+  #s2 .big .em{
+    color: var(--violet-soft);
+    font-weight:700;
+  }
+  #s2 .cap{
+    margin-top:22px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color: var(--text-dim);
+  }
+
+  /* Scene 3 : reveal produit */
+  #s3 .logo{
+    font-family:'Unbounded', sans-serif;
+    font-weight:900;
+    font-size: clamp(40px, 12vw, 54px);
+    letter-spacing: -0.02em;
+  }
+  #s3 .logo .ai{ color: var(--violet-soft); }
+  #s3 .tag{
+    margin-top:16px;
+    max-width: 280px;
+    font-size:15px;
+    color: var(--text-dim);
+    line-height:1.5;
+  }
+  .logo-underline{
+    width:0;
+    height:3px;
+    background: linear-gradient(90deg, var(--violet), var(--violet-soft));
+    margin: 14px auto 0;
+    border-radius:3px;
+  }
+  #s3.active .logo-underline{ animation: growLine 0.9s 0.35s ease forwards; }
+  @keyframes growLine{ to{ width:120px; } }
+
+  /* Scene 4 : demo mockup rapport */
+  #s4{ justify-content:flex-start; padding-top:64px; }
+  .card{
+    width:100%;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius:16px;
+    padding: 18px 18px 20px;
+    text-align:left;
+  }
+  .card-head{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:16px;
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; }
+  .dot.r{ background:var(--red); }
+  .dot.y{ background:var(--gold); }
+  .dot.g{ background:var(--green); }
+  .card-head span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    color: var(--text-dim);
+    margin-left:6px;
+  }
+  .score-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color: var(--text-dim);
+    margin-bottom:6px;
+  }
+  .score-num{
+    font-family:'Unbounded', sans-serif;
+    font-weight:800;
+    font-size:44px;
+    color:var(--violet-soft);
+    line-height:1;
+  }
+  .score-num sup{
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color: var(--text-dim);
+    margin-left:3px;
+  }
+  .bar-track{
+    margin-top:12px;
+    height:6px;
+    border-radius:6px;
+    background: rgba(255,255,255,0.08);
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    width:0%;
+    border-radius:6px;
+    background: linear-gradient(90deg, var(--violet), var(--violet-soft));
+  }
+  .divider{
+    height:1px;
+    background: rgba(255,255,255,0.08);
+    margin: 18px 0 16px;
+  }
+  .niche-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color: var(--text-dim);
+    margin-bottom:8px;
+    opacity:0;
+  }
+  .niche-text{
+    font-size:15px;
+    line-height:1.5;
+    color: var(--text);
+    opacity:0;
+    transform: translateY(6px);
+  }
+  .stat-pill{
+    display:inline-flex;
+    margin-top:14px;
+    padding: 7px 12px;
+    border-radius:8px;
+    background: rgba(240,182,77,0.12);
+    border: 1px solid rgba(240,182,77,0.35);
+    color: var(--gold);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    font-weight:500;
+    opacity:0;
+  }
+  #s4.active .niche-label{ animation: fadeUp 0.5s 2.4s ease forwards; }
+  #s4.active .niche-text{ animation: fadeUp 0.6s 2.6s ease forwards; }
+  #s4.active .stat-pill{ animation: fadeUp 0.5s 3.5s ease forwards; }
+  @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+
+  /* Scene 5 : CTA */
+  #s5 .cta-title{
+    font-family:'Unbounded', sans-serif;
+    font-weight:700;
+    font-size: clamp(24px, 7vw, 30px);
+    line-height:1.3;
+  }
+  #s5 .url{
+    margin-top:20px;
+    font-family:'JetBrains Mono', monospace;
+    font-weight:500;
+    font-size: 19px;
+    color: var(--violet-soft);
+    padding: 11px 22px;
+    border: 1px solid rgba(179,157,255,0.4);
+    border-radius: 999px;
+  }
+  #s5.active .url{ animation: pulseGlow 1.6s ease-in-out infinite; }
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(109,40,255,0.35); }
+    50%{ box-shadow: 0 0 26px 4px rgba(109,40,255,0.35); }
+  }
+  #s5 .sub{
+    margin-top:16px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color: var(--text-dim);
+  }
+
+  .hint{
+    max-width: 420px;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    line-height:1.6;
+    color:#5b5670;
+  }
+  .hint b{ color:#8a83a8; }
+
+  @media (prefers-reduced-motion: reduce){
+    #s1 .line, #s2, #s3, #s4 .niche-label, #s4 .niche-text, #s4 .stat-pill{
+      animation: none !important;
+      opacity:1 !important;
+      transform:none !important;
+    }
+    .logo-underline{ animation:none !important; width:120px !important; }
+    #s5 .url{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage-wrap">
+    <div class="phone-stage" id="stage" tabindex="0" aria-label="Rejouer le teaser">
+
+      <div class="progress-row" id="progressRow"></div>
+
+      <div class="scene" id="s1">
+        <div class="line" data-i="0">0€.</div>
+        <div class="line" data-i="1">Zéro client.</div>
+        <div class="line" data-i="2">Zéro idée <span class="accent">d'où te positionner.</span></div>
+      </div>
+
+      <div class="scene" id="s2">
+        <div class="eyebrow">Le vrai problème</div>
+        <div class="big">Ce n'est jamais<br>tes compétences.<br><span class="em">C'est ton positionnement.</span></div>
+        <div class="cap">vrai pour 8 freelances débutants sur 10</div>
+      </div>
+
+      <div class="scene" id="s3">
+        <div class="logo">Niche<span class="ai">AI</span></div>
+        <div class="logo-underline"></div>
+        <div class="tag">L'IA qui te dit où te positionner, combien facturer, et par où commencer.</div>
+      </div>
+
+      <div class="scene" id="s4">
+        <div class="card">
+          <div class="card-head">
+            <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+            <span>NICHEAI — RAPPORT STRATEGIQUE</span>
+          </div>
+          <div class="score-label">Score de potentiel</div>
+          <div class="score-num"><span id="counter">0</span><sup>/100</sup></div>
+          <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+
+          <div class="divider"></div>
+
+          <div class="niche-label">Niche recommandée</div>
+          <div class="niche-text">Spécialiste contenu vidéo court format pour instituts de beauté indépendants</div>
+          <div class="stat-pill">TJM recommandé : 300 EUR/jour</div>
+        </div>
+      </div>
+
+      <div class="scene" id="s5">
+        <div class="cta-title">Ton rapport gratuit.<br>2 minutes.</div>
+        <div class="url">nicheai.fr</div>
+        <div class="sub">lien en bio</div>
+      </div>
+
+    </div>
+
+    <div class="hint">Astuce : passe le navigateur en plein écran, cadre uniquement ce cadre, et enregistre l'écran (Windows : <b>Win + Alt + R</b>, ou l'app "Enregistreur d'écran"). Clique sur le cadre pour relancer la boucle à tout moment.</div>
+  </div>
+
+<script>
+  const durations = [3200, 4200, 4600, 6200, 4200]; // ms par scene
+  const scenes = ['s1','s2','s3','s4','s5'];
+  const progressRow = document.getElementById('progressRow');
+  const stage = document.getElementById('stage');
+  const counterEl = document.getElementById('counter');
+  const barFill = document.getElementById('barFill');
+
+  scenes.forEach(() => {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    const fill = document.createElement('div');
+    fill.className = 'seg-fill';
+    seg.appendChild(fill);
+    progressRow.appendChild(seg);
+  });
+  const segFills = progressRow.querySelectorAll('.seg-fill');
+
+  let current = -1;
+  let timer = null;
+  let running = true;
+
+  function animateCounter(){
+    const target = 68;
+    const start = performance.now();
+    const dur = 1300;
+    function tick(now){
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(eased * target);
+      counterEl.textContent = val;
+      barFill.style.width = (eased * target) + '%';
+      if(p < 1 && running) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function resetLine1(){
+    document.querySelectorAll('#s1 .line').forEach(l => l.classList.remove('hit'));
+  }
+
+  function playScene(i){
+    if(!running) return;
+    clearTimeout(timer);
+
+    // fermer scene precedente
+    scenes.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      if(idx === i){
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    // barre de progression
+    segFills.forEach((f, idx) => {
+      f.classList.remove('animate');
+      if(idx < i){
+        f.classList.add('done');
+        f.style.width = '100%';
+      } else if(idx === i){
+        f.classList.remove('done');
+        f.style.width = '0%';
+        void f.offsetWidth; // reflow
+        f.classList.add('animate');
+        f.style.transitionDuration = durations[i] + 'ms';
+        requestAnimationFrame(() => { f.style.width = '100%'; });
+      } else {
+        f.classList.remove('done');
+        f.style.transitionDuration = '0ms';
+        f.style.width = '0%';
+      }
+    });
+
+    if(i === 0){ resetLine1(); }
+    if(i === 4){ counterEl.textContent = '0'; barFill.style.width = '0%'; }
+
+    if(scenes[i] === 's1'){
+      document.querySelectorAll('#s1 .line').forEach((l, idx) => {
+        setTimeout(() => l.classList.add('hit'), 150 + idx * 260);
+      });
+    }
+    if(scenes[i] === 's4'){
+      setTimeout(animateCounter, 550);
+    }
+
+    current = i;
+    timer = setTimeout(() => {
+      playScene((i + 1) % scenes.length);
+    }, durations[i]);
+  }
+
+  stage.addEventListener('click', () => { playScene(0); });
+  stage.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); playScene(0); }
+  });
+
+  playScene(0);
+</script>
+
+</body>
+</html>
