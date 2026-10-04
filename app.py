@@ -29,8 +29,11 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from models import db, User, Rapport
 
 _db_url = _os.getenv("DATABASE_URL", "sqlite:///local.db")
-if _db_url.startswith("postgres://"):
-    _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+# Driver psycopg2 explicite : SQLAlchemy 2.1+ utilise psycopg (v3) par defaut
+for _prefix in ("postgres://", "postgresql://"):
+    if _db_url.startswith(_prefix):
+        _db_url = _db_url.replace(_prefix, "postgresql+psycopg2://", 1)
+        break
 app.config["SQLALCHEMY_DATABASE_URI"] = _db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
