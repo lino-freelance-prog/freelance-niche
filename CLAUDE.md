@@ -15,10 +15,15 @@ NicheAI (nicheai.fr) : SaaS de rapports de positionnement pour freelances, propu
 
 ## Environnements
 
-- Laptop : `/c/Users/Proprietaire/Documents/freelance-niche`
-- PC fixe : `/c/Users/lycit/freelance-niche`
-- Repo GitHub : `lino-freelance-prog/freelance-niche`
-- Toujours vérifier `git pull` avant de travailler (deux machines).
+Deux machines (PC portable + tour), **même chemin sur les deux** : `C:\dev\freelance-niche` (Git Bash : `/c/dev/freelance-niche`).
+Repo GitHub : `lino-freelance-prog/freelance-niche`.
+
+Routine sur chaque PC :
+1. `cd /c/dev/freelance-niche && git pull` avant de commencer
+2. `claude` pour lancer Claude Code dans le dossier
+3. `git add -A && git commit -m "..." && git push` avant de changer de machine
+
+Le fichier `.env` (clés API) n'est pas sur GitHub : il est copié à la main sur chaque PC, jamais commité.
 
 ## ⚠️ Pièges connus (déjà vécus — ne pas reproduire)
 
